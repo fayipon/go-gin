@@ -10,7 +10,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestIHelloGetRouter(t *testing.T) {
+func TestCase0002(t *testing.T) {
 	router := router.Setup()
 
 	w := httptest.NewRecorder()
@@ -20,7 +20,4 @@ func TestIHelloGetRouter(t *testing.T) {
 
 	// 是否 200
 	assert.Equal(t, http.StatusOK, w.Code)
-
-	// 是否對應內容
-	assert.Equal(t, "Hello, It Home!", w.Body.String())
 }
