@@ -18,6 +18,9 @@ func TestIHelloGetRouter(t *testing.T) {
 
 	router.ServeHTTP(w, req)
 
+	// 是否 200
 	assert.Equal(t, http.StatusOK, w.Code)
+
+	// 是否對應內容
 	assert.Equal(t, "Hello, It Home!", w.Body.String())
 }
