@@ -6,11 +6,10 @@ import (
 
 	database "github.com/fayipon/go-gin/Database/Mysql"
 	models "github.com/fayipon/go-gin/Models"
+	"github.com/gin-contrib/sessions"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
-	// 导入session包
-	// 导入session存储引擎
 )
 
 type UserRepo struct {
@@ -21,6 +20,45 @@ func NewUserController() *UserRepo {
 	db := database.InitDb()
 	db.AutoMigrate(&models.User{})
 	return &UserRepo{Db: db}
+}
+
+// session test , count
+func (repository *UserRepo) SessionTest(c *gin.Context) {
+
+	// 從 ctx 中取出 session
+	session := sessions.Default(c)
+	var count int
+
+	// 取得 session 中的值
+	v := session.Get("count")
+	if v == nil {
+		count = 0
+	} else {
+		count = v.(int)
+		count++
+	}
+
+	// 設定 session 中的值（不會儲存）
+	session.Set("count", count)
+
+	// 儲存 session 中的值
+	session.Save()
+	c.JSON(200, gin.H{"count": count})
+}
+
+// session test , count
+func (repository *UserRepo) SessionTestB(c *gin.Context) {
+
+	// 從 ctx 中取出 session
+	session := sessions.Default(c)
+
+	// 取得 session 中的值
+	v := session.Get("count")
+	if v == nil {
+		v = 0
+	}
+
+	c.JSON(200, gin.H{"count": v})
 }
 
 //create user
