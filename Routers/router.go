@@ -1,7 +1,10 @@
 package Routers
 
 import (
+	"net/http"
+
 	"github.com/fayipon/go-gin/Controller"
+	"github.com/gin-gonic/contrib/static"
 	"github.com/gin-gonic/gin"
 
 	"github.com/gin-contrib/sessions"
@@ -10,6 +13,15 @@ import (
 
 func Setup() *gin.Engine {
 	router := gin.Default()
+
+	// Serve frontend static files
+	router.Use(static.Serve("/", static.LocalFile("./Views", true)))
+
+	router.GET("/", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{
+			"message": "pong",
+		})
+	})
 
 	// 建立 store
 	store := cookie.NewStore([]byte("secret"))
