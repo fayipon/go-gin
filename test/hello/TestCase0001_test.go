@@ -5,13 +5,12 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/fayipon/go-gin/router"
-
+	"github.com/fayipon/go-gin/Router"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCase0001(t *testing.T) {
-	router := router.Setup()
+	router := Router.Setup()
 
 	w := httptest.NewRecorder()
 	req, _ := http.NewRequest(http.MethodGet, "/hello", nil)

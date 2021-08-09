@@ -3,6 +3,7 @@ module github.com/fayipon/go-gin
 go 1.16
 
 require (
+	github.com/gin-contrib/sessions v0.0.3 // indirect
 	github.com/gin-gonic/gin v1.7.3 // indirect
 	github.com/go-playground/validator/v10 v10.8.0 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
@@ -15,4 +16,6 @@ require (
 	golang.org/x/sys v0.0.0-20210806184541-e5e7981a1069 // indirect
 	google.golang.org/protobuf v1.27.1 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
+	gorm.io/driver/mysql v1.1.1 // indirect
+	gorm.io/gorm v1.21.12 // indirect
 )

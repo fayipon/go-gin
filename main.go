@@ -2,10 +2,10 @@ package main
 
 //	"demoproject/Struct"
 import (
-	"github.com/fayipon/go-gin/router"
+	"github.com/fayipon/go-gin/Router"
 )
 
 func main() {
-	r := router.Setup()
-	r.Run(":80")
+	r := Router.Setup()
+	r.Run(":8080")
 }
