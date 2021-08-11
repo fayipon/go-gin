@@ -18,12 +18,7 @@ yarn add react-bootstrap bootstrap
 
 https://react-bootstrap.github.io/getting-started/introduction
 
-增加
-<link rel="stylesheet"
-  href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
-  integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
-  crossorigin="anonymous"
-/>
+增加bootstrap CSS
 
 6. 安裝styled-components
 yarn add styled-components
