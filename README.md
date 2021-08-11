@@ -11,6 +11,9 @@ Golang + Gin
 Client端
 React + React-Bootstrap + Styled Components
 
-SPA Web 應用
+
+# TODO
+1. SPA Web 應用
+2. golang websocket 替代API
 
 
