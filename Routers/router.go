@@ -3,7 +3,6 @@ package Routers
 import (
 	"net/http"
 
-	"github.com/fayipon/go-gin/Controller"
 	"github.com/gin-gonic/contrib/static"
 	"github.com/gin-gonic/gin"
 
@@ -13,29 +12,25 @@ import (
 
 func Setup() *gin.Engine {
 	router := gin.Default()
+	//	router.LoadHTMLGlob("Views/**/*")
+	router.Use(static.Serve("/", static.LocalFile("./React/react-bootstrap/build", true)))
 
-	// Serve frontend static files
-	router.Use(static.Serve("/", static.LocalFile("./Views", true)))
-
-	router.GET("/", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"message": "pong",
-		})
-	})
-
-	// 建立 store
+	// session
 	store := cookie.NewStore([]byte("secret"))
 	router.Use(sessions.Sessions("mysession", store))
 
-	userController := Controller.NewUserController()
+	//authController := Controller.NewAuthController()
+	//router.GET("/", authController.LoginPage)
 
-	router.GET("/session", userController.SessionTest)
-
-	router.GET("/sessionB", userController.SessionTestB)
-
-	router.POST("/users", userController.CreateUser)
-	router.GET("/users", userController.GetUsers)
-	router.GET("/users/:id", userController.GetUser)
+	// Setup route group for the API
+	api := router.Group("/api")
+	{
+		api.GET("/", func(c *gin.Context) {
+			c.JSON(http.StatusOK, gin.H{
+				"message": "pong",
+			})
+		})
+	}
 
 	return router
 }
