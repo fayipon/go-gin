@@ -14,11 +14,10 @@ yarn add react-router-dom
 4. 安裝react-bootstrap
 yarn add react-bootstrap bootstrap
 
-5. 修改public/index.html
+5. 修改public/index.html , 增加bootstrap CSS
 
-https://react-bootstrap.github.io/getting-started/introduction
+  https://react-bootstrap.github.io/getting-started/introduction
 
-增加bootstrap CSS
 
 6. 安裝styled-components
 yarn add styled-components
