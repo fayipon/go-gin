@@ -8,10 +8,10 @@ const Styles = styled.div`
         background: url(${boatImage}) no-repeat fixed bottom;
         background-size : cover;
         color:#efefef;
-        height:200px;
+        height:100px;
         position: relative;
         z-index: -2;
-        padding-top:50px;
+        padding-top:10px;
     }
 
     .overlay {

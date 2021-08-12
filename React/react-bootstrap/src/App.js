@@ -1,9 +1,14 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import { Home } from './Home';
-import { About } from './About';
-import { Contact } from './Contact';
-import { NoMatch } from './NoMatch';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { Home } from './pages/Home';
+import { Sport } from './pages/Sport';
+import { Slot } from './pages/Slot';
+import { Lottery } from './pages/Lottery';
+import { Chess } from './pages/Chess';
+import { ESport } from './pages/ESport';
+import { Login } from './pages/Login';
+import { Logout } from './pages/Logout';
+
 import { Layout } from './components/Layout';
 import { NavBar } from './components/NavBar';
 import { Jumbotron } from './components/Jumbotron';
@@ -11,18 +16,21 @@ import { Jumbotron } from './components/Jumbotron';
 function App() {
   return (
     <React.Fragment>
+    <Router>
       <NavBar />
       <Jumbotron />
       <Layout>
-        <Router>
-          <Switch>
             <Route exact path="/" component={Home} />
-            <Route path="/about" component={About} />
-            <Route path="/contact" component={Contact} />
-            <Route component={NoMatch} />
-          </Switch>
-        </Router>
+            <Route exact path="/sport" component={Sport} />
+            <Route exact path="/slot" component={Slot} />
+            <Route exact path="/lottery" component={Lottery} />
+            <Route exact path="/chess" component={Chess} />
+            <Route exact path="/esport" component={ESport} />
+
+            <Route exact path="/login" component={Login} />
+            <Route exact path="/logout" component={Logout} />
       </Layout>
+      </Router>
     </React.Fragment>
   );
 }
