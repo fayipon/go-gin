@@ -24,4 +24,5 @@ yarn add styled-components
 
 # todo
 
-SPA
+SPA （done)
+Websocket with ReactJS
