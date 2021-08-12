@@ -36,4 +36,7 @@ yarn add styled-components
 
 SPA （done)
 
+Model with error messages
+
 Websocket with ReactJS
+
