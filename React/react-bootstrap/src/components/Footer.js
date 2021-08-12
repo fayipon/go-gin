@@ -8,7 +8,7 @@ const Styles = styled.div`
         background: url(${boatImage}) no-repeat fixed bottom;
         background-size : cover;
         color:#efefef;
-        height:100px;
+        height:250px;
         position: relative;
         z-index: -2;
         padding-top:25px;
@@ -24,14 +24,15 @@ const Styles = styled.div`
         right: 0;
         z-index: -1;
     }
+
 `;
 
-export const Jumbotron = (props) => (
+export const Footer = (props) => (
     <Styles>
         <Jumbo fluid className="jumbo">
             <div className="overlay"></div>
             <Container>
-                <h1>{props.title}</h1>
+                <h1>footer</h1>
             </Container>
         </Jumbo>
     </Styles>

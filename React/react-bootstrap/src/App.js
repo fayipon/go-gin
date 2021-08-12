@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
-import { Home } from './pages/Home';
+import Home from './pages/Home';
 import { Sport } from './pages/Sport';
 import { Slot } from './pages/Slot';
 import { Lottery } from './pages/Lottery';
@@ -11,14 +11,12 @@ import { Logout } from './pages/Logout';
 
 import { Layout } from './components/Layout';
 import { NavBar } from './components/NavBar';
-import { Jumbotron } from './components/Jumbotron';
 
 function App() {
   return (
     <React.Fragment>
     <Router>
       <NavBar />
-      <Jumbotron />
       <Layout>
             <Route exact path="/" component={Home} />
             <Route exact path="/sport" component={Sport} />
@@ -26,7 +24,6 @@ function App() {
             <Route exact path="/lottery" component={Lottery} />
             <Route exact path="/chess" component={Chess} />
             <Route exact path="/esport" component={ESport} />
-
             <Route exact path="/login" component={Login} />
             <Route exact path="/logout" component={Logout} />
       </Layout>
