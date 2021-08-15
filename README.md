@@ -21,6 +21,10 @@ SPA
 
 # TODO
 08/13 
-1. Login Auth 實作
-2. 前端粗略排版
+1. Login Auth 實作 done
+2. 前端粗略排版 done
+
+08/15
+1. 數據庫交互實裝
+2. register + Restful API
 
