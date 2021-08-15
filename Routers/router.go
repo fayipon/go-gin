@@ -24,6 +24,7 @@ func Setup() *gin.Engine {
 
 	// 雖說是spa, 但每一頁都需要設定, 不然重整會出現404
 	router.Use(static.Serve("/", static.LocalFile("./Views/paper-kit-react/build", true)))
+	router.Use(static.Serve("/home", static.LocalFile("./Views/paper-kit-react/build", true)))
 	router.Use(static.Serve("/sport", static.LocalFile("./Views/paper-kit-react/build", true)))
 	router.Use(static.Serve("/lottery", static.LocalFile("./Views/paper-kit-react/build", true)))
 	router.Use(static.Serve("/slot", static.LocalFile("./Views/paper-kit-react/build", true)))
