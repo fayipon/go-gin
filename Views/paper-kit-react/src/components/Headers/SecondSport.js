@@ -43,8 +43,8 @@ function SecondSport() {
     <>
       <div
         style={{
-          backgroundImage:
-            "url(" + require("assets/img/second-sport.jpg").default + ")",
+          backgroundImage: "url(" + require("assets/img/second-sport.jpg").default + ")",
+          backgroundPosition: "0px 440px",
         }}
         className="page-header page-header-xs"
         data-parallax={true}

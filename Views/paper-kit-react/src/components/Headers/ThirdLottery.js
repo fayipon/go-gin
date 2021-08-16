@@ -22,7 +22,7 @@ import React from "react";
 
 // core components
 
-function SecondHeader() {
+function ThirdHeader() {
   let pageHeader = React.createRef();
 
   React.useEffect(() => {
@@ -45,8 +45,9 @@ function SecondHeader() {
         style={{
           backgroundImage: "url(" + require("assets/img/second-lottery.jpg").default + ")",
           backgroundPosition: "0px 1200px",
+          minHeight: "20vh",
         }}
-        className="page-header page-header-xs"
+        className="page-header"
         data-parallax={true}
         ref={pageHeader}
       >
@@ -56,4 +57,4 @@ function SecondHeader() {
   );
 }
 
-export default SecondHeader;
+export default ThirdHeader;

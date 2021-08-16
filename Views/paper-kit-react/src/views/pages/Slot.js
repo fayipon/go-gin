@@ -28,7 +28,7 @@ import {
 
 // core components
 import HomeNavbar from "components/Navbars/HomeNavbar.js";
-import SecondHeader from "components/Headers/SecondSport";
+import SecondHeader from "components/Headers/SecondSlot";
 import HomeFooter from "components/Footers/HomeFooter.js";
 
 function SlotPage() {

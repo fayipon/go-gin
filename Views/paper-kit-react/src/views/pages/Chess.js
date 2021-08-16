@@ -28,7 +28,7 @@ import {
 
 // core components
 import HomeNavbar from "components/Navbars/HomeNavbar.js";
-import SecondHeader from "components/Headers/SecondSport.js";
+import SecondHeader from "components/Headers/SecondChess.js";
 import HomeFooter from "components/Footers/HomeFooter.js";
 
 function ChessPage() {

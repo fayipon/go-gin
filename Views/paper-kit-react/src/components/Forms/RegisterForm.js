@@ -9,9 +9,9 @@ import { Button, Form, Input } from "reactstrap";
 // react toast
 import { toast } from 'react-toastify'; //import toast
 
-import history from './../../history';
+import history from '../../history';
 
-class LoginForm extends React.Component {
+class RegisterForm extends React.Component {
     
     constructor(props){
         super(props)
@@ -33,10 +33,11 @@ class LoginForm extends React.Component {
     submitForm(event){
         event.preventDefault()
         
-        axios.post('http://localhost:8080/api/login',this.state).
+        axios.post('http://localhost:8080/api/register',this.state).
         then( response => {
             if (response.data.status == "1") {
                 // 成功
+                
                 history.push('/home');
 
             } else {
@@ -73,11 +74,11 @@ class LoginForm extends React.Component {
             <Input placeholder="帳號" type="text" id="account" name="account" value={this.state.account} onChange={this.changeState} />
             <label>密碼</label>
             <Input placeholder="密碼" type="password" id="password" name="password" value={this.state.password} onChange={this.changeState}  />
-            <Button block value="登入" className="btn-round" color="danger" >登入</Button>
+            <Button block value="登入" className="btn-round" color="danger" >注冊</Button>
           </Form>
         )
     }
 }
 
 
-export default LoginForm;
+export default RegisterForm;

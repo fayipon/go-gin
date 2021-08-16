@@ -25,15 +25,16 @@ import { Button, Card, Container, Row, Col } from "reactstrap";
 import axios from 'axios';
 
 // core components
-import LoginForm from "components/Forms/LoginForm.js";
+import RegisterForm from "components/Forms/RegisterForm.js";
 
 import history from '../../history';
-function rediructRegister() {
-  history.push('/register');
+
+function rediructLogin() {
+  history.push('/Login');
 }
 
-class LoginPage extends React.Component {
-  
+class RegisterPage extends React.Component {
+
   constructor(props){
     super(props)
     this.state = {
@@ -49,7 +50,6 @@ class LoginPage extends React.Component {
     })
 
   }
-
 
   useEffect() {
     document.body.classList.add("register-page");
@@ -72,7 +72,7 @@ class LoginPage extends React.Component {
           <Row>
             <Col className="ml-auto mr-auto" lg="4">
               <Card className="card-register ml-auto mr-auto">
-                <h3 className="title mx-auto">登入</h3>
+                <h3 className="title mx-auto">注冊</h3>
                 <div className="social-line text-center">
                   <Button
                     className="btn-neutral btn-just-icon mr-1"
@@ -99,7 +99,7 @@ class LoginPage extends React.Component {
                     <i className="fa fa-twitter" />
                   </Button>
                 </div>
-                <LoginForm />
+                <RegisterForm />
 
                 <div className="forgot">
                   <Button
@@ -113,9 +113,10 @@ class LoginPage extends React.Component {
                   <Button
                     className="btn-link"
                     color="danger"
-                    onClick={rediructRegister}
+                    to="/login"
+                    onClick={rediructLogin}
                   >
-                    沒有帳號
+                    我有帳號
                   </Button>
                 </div>
               </Card>
@@ -134,4 +135,4 @@ class LoginPage extends React.Component {
 
 }
 
-export default LoginPage;
+export default RegisterPage;

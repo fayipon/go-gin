@@ -1,7 +1,6 @@
 package Routers
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 
@@ -19,6 +18,7 @@ type User struct {
 }
 
 func Setup() *gin.Engine {
+
 	router := gin.Default()
 	//	router.LoadHTMLGlob("Views/**/*")
 
@@ -30,8 +30,13 @@ func Setup() *gin.Engine {
 	router.Use(static.Serve("/slot", static.LocalFile("./Views/paper-kit-react/build", true)))
 	router.Use(static.Serve("/esport", static.LocalFile("./Views/paper-kit-react/build", true)))
 	router.Use(static.Serve("/chess", static.LocalFile("./Views/paper-kit-react/build", true)))
+	router.Use(static.Serve("/register", static.LocalFile("./Views/paper-kit-react/build", true)))
 	router.Use(static.Serve("/login", static.LocalFile("./Views/paper-kit-react/build", true)))
 	router.Use(static.Serve("/logout", static.LocalFile("./Views/paper-kit-react/build", true)))
+	router.Use(static.Serve("/game/lottery", static.LocalFile("./Views/paper-kit-react/build", true)))
+	router.Use(static.Serve("/game/sport", static.LocalFile("./Views/paper-kit-react/build", true)))
+	router.Use(static.Serve("/game/slot", static.LocalFile("./Views/paper-kit-react/build", true)))
+	router.Use(static.Serve("/game/chess", static.LocalFile("./Views/paper-kit-react/build", true)))
 
 	// session
 	store := cookie.NewStore([]byte("gssecret"))
@@ -54,16 +59,31 @@ func Setup() *gin.Engine {
 			// 初始化session对象
 			session := sessions.Default(c)
 
-			if session.Get("auth") == nil {
+			log.Println(session.Get("auth"))
+
+			if session.Get("auth") == "1" {
+				c.JSON(http.StatusOK, gin.H{
+					"status":  "1",
+					"message": "已登入",
+				})
+			} else {
 				c.JSON(http.StatusOK, gin.H{
 					"status":  "0",
-					"message": "請先登入！",
+					"message": "未登入",
 				})
 			}
+		})
+
+		api.GET("/logout", func(c *gin.Context) {
+
+			// 初始化session对象
+			session := sessions.Default(c)
+			session.Set("auth", "0")
+			session.Save()
 
 			c.JSON(http.StatusOK, gin.H{
 				"status":  "1",
-				"message": "請先登入！",
+				"message": "已登出",
 			})
 		})
 
@@ -77,19 +97,14 @@ func Setup() *gin.Engine {
 				log.Println(u.Password)
 			}
 
-			fmt.Println("account => ", u.Account)
-
 			if u.Account == "admin" && u.Password == "12345" {
 
 				// 初始化session
 				session := sessions.Default(c)
 
-				// 取得session
-				// session.Get("auth")
-
 				// 設置session
 				session.Set("account", u.Account)
-				session.Set("auth", 1)
+				session.Set("auth", "1")
 
 				// 保存session
 				session.Save()
@@ -107,6 +122,35 @@ func Setup() *gin.Engine {
 					"message": "帳號密碼錯誤！",
 				})
 			}
+
+		})
+
+		api.POST("/register", func(c *gin.Context) {
+
+			// 初始化user struct
+			u := User{}
+			if c.ShouldBind(&u) == nil {
+				// 绑定成功， 打印请求参数
+				log.Println(u.Account)
+				log.Println(u.Password)
+			}
+
+			// 初始化session
+			session := sessions.Default(c)
+
+			// 設置session
+			session.Set("account", u.Account)
+			session.Set("auth", "1")
+
+			// 保存session
+			session.Save()
+
+			c.JSON(http.StatusOK, gin.H{
+				"status":  "1",
+				"message": "success",
+				"account": "admin",
+				"balance": "999999",
+			})
 
 		})
 	}

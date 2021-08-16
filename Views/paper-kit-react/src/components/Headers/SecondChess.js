@@ -22,7 +22,7 @@ import React from "react";
 
 // core components
 
-function SecondHeader() {
+function SecondChess() {
   let pageHeader = React.createRef();
 
   React.useEffect(() => {
@@ -43,8 +43,8 @@ function SecondHeader() {
     <>
       <div
         style={{
-          backgroundImage: "url(" + require("assets/img/second-lottery.jpg").default + ")",
-          backgroundPosition: "0px 1200px",
+          backgroundImage:
+            "url(" + require("assets/img/second-chess.jpg").default + ")",
         }}
         className="page-header page-header-xs"
         data-parallax={true}
@@ -56,4 +56,4 @@ function SecondHeader() {
   );
 }
 
-export default SecondHeader;
+export default SecondChess;

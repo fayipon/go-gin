@@ -21,6 +21,10 @@ import { Link } from "react-router-dom";
 // nodejs library that concatenates strings
 import classnames from "classnames";
 
+// ajax
+import axios from 'axios';
+import history from './../../history';
+
 // reactstrap components
 import {
   Collapse,
@@ -33,15 +37,39 @@ import {
   Button,
 } from "reactstrap";
 
+// check User is login
+function checkUserLogin() {
+  axios.get('http://localhost:8080/api/session').
+  then( response => {
+      if (response.data.status == "0") {
+          // 未登入 , 跳轉到登入
+          history.push('/login');
+      } 
+  })
+}
+
+// logoutBtn onClick Event
+function handleClick() {
+  axios.get('http://localhost:8080/api/logout',this.state).
+  then( response => {
+      if (response.data.status == "1") {
+          // 已登出 , 跳轉到登入頁
+          history.push('/login');
+      } 
+  })
+}
+
 function ExamplesNavbar() {
   const [navbarColor, setNavbarColor] = React.useState("navbar-transparent");
   const [navbarCollapse, setNavbarCollapse] = React.useState(false);
-
+  
   const toggleNavbarCollapse = () => {
     setNavbarCollapse(!navbarCollapse);
     document.documentElement.classList.toggle("nav-open");
   };
 
+  checkUserLogin();
+  
   React.useEffect(() => {
     const updateNavbarColor = () => {
       if (
@@ -63,6 +91,7 @@ function ExamplesNavbar() {
       window.removeEventListener("scroll", updateNavbarColor);
     };
   });
+
   return (
     <Navbar
       className={classnames("fixed-top", navbarColor)}
@@ -136,13 +165,8 @@ function ExamplesNavbar() {
               </NavLink>
             </NavItem>
             <NavItem>
-              <Button
-                className="btn-round"
-                color="danger"
-                href="https://www.creative-tim.com/product/paper-kit-pro-react?ref=pkr-examples-navbar"
-                target="_blank"
-              >
-                <i className="nc-icon nc-spaceship"></i> Upgrade to Pro
+              <Button className="btn-round" color="danger" onClick={handleClick}>
+                 登出
               </Button>
             </NavItem>
           </Nav>
