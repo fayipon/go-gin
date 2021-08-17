@@ -641,3 +641,38 @@
     display: none !important;
   }
 }
+
+.lottery_bg {
+  background: linear-gradient(#070929,#202843,#ffffff);
+}
+
+.betarea {
+  display: flex;
+  padding-left: 0;    
+  list-style: none;
+  border-radius: .25rem;
+}
+
+.betarea_btn {
+  background-color: transparent;
+  border: 2px solid #f5593d;
+  border-radius: 20px;
+  color: #f5593d;
+  height: 36px;
+  margin: 0 2px;
+  min-width: 36px;
+  padding: 6px 8px;
+  font-weight: 600;
+}
+
+.betarea_btn:hover {
+  background-color: #f5593d;
+  color: #fff;
+}
+
+.betarea_btn.active {
+  background-color: #f5593d;
+  color: #fff;
+  
+}
+
