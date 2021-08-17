@@ -649,6 +649,7 @@
 .betarea {
   display: flex;
   padding-left: 0;    
+  margin-bottom: 10px;
   list-style: none;
   border-radius: .25rem;
 }
@@ -673,6 +674,21 @@
 .betarea_btn.active {
   background-color: #f5593d;
   color: #fff;
-  
 }
 
+.result_num {
+  background-color: #20397c;
+  border: 2px solid #6579af;
+  border-radius: 20px;
+  color: #fff;
+  height: 36px;
+  margin: 0 2px;
+  min-width: 36px;
+  padding: 5px 12px;
+  font-weight: 600;
+}
+
+.result_num:hover {
+  background-color: #20397c;
+  color: #fff;
+}

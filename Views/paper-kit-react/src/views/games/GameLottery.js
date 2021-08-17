@@ -24,8 +24,6 @@ import {
   Container,
   Row,
   Col,
-  Pagination, PaginationItem, PaginationLink,
-  
   Nav,
   NavItem,
   NavLink,
@@ -38,7 +36,7 @@ import HomeNavbar from "components/Navbars/HomeNavbar.js";
 import Header from "components/Headers/ThirdLottery.js";
 import HomeFooter from "components/Footers/HomeFooter.js";
 
-import BetArea from "components/Lottery/BetArea-01.js";
+import BetArea from "components/Lottery/BetArea.js";
 
 function GameLottery() {
 
@@ -77,33 +75,13 @@ function GameLottery() {
               </Col>
               <Col md="5">
                   <h4 className="mb-2">12345678期</h4>
-                  <Pagination>
-                    <PaginationItem className="active">
-                      <PaginationLink href="#pablo" onClick={e => e.preventDefault()}>
-                        1
-                      </PaginationLink>
-                    </PaginationItem>
-                    <PaginationItem className="active">
-                      <PaginationLink href="#pablo" onClick={e => e.preventDefault()}>
-                        2 
-                      </PaginationLink>
-                    </PaginationItem>
-                    <PaginationItem className="active">
-                      <PaginationLink href="#pablo" onClick={e => e.preventDefault()}>
-                        3
-                      </PaginationLink>
-                    </PaginationItem>
-                    <PaginationItem className="active">
-                      <PaginationLink href="#pablo" onClick={e => e.preventDefault()}>
-                        4
-                      </PaginationLink>
-                    </PaginationItem>
-                    <PaginationItem className="active">
-                      <PaginationLink href="#pablo" onClick={e => e.preventDefault()}>
-                        5
-                      </PaginationLink>
-                    </PaginationItem>
-                  </Pagination>
+                  <div className="betarea">
+                    <a className="result_num">0</a>
+                    <a className="result_num">1</a>
+                    <a className="result_num">2</a>
+                    <a className="result_num">3</a>
+                    <a className="result_num">4</a>
+                  </div>
               </Col>
               <Col md="5">
                   <h4>12345679期</h4>
