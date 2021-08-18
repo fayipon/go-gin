@@ -1,7 +1,5 @@
 import React from 'react';
-
-// reactstrap components
-import { Row, Col, Pagination, PaginationItem, PaginationLink } from "reactstrap";
+import ReactDOM from 'react-dom';
 
 export default function BtnBetArea(props) {
 
@@ -13,8 +11,25 @@ export default function BtnBetArea(props) {
             e.target.className = "betarea_btn";    
         }
 
-        console.log(e.target.className);
-        console.log(props);
+        // 計算注數
+        var obj = document.querySelectorAll('.betarea_btn');
+        var bet_count = 0;
+        obj.forEach(d => {
+            if (d.className == "betarea_btn active") {
+                bet_count++;
+            } 
+        });
+        
+        ReactDOM.render(bet_count,document.getElementById('bet_count'))
+        
+        // 計算下注金額
+        var amount = document.getElementById('amount').value;
+        if (amount == "") {
+            document.getElementById('amount').value = 1;
+        }
+        ReactDOM.render(amount*bet_count,document.getElementById('bet_amount'))
+        
+        console.log(amount);
     }
 
     return (

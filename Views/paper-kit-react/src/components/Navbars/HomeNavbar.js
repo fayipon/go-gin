@@ -149,6 +149,16 @@ function ExamplesNavbar() {
             </NavItem>
             <NavItem>
               <NavLink to="/event" tag={Link}>
+                真人
+              </NavLink>
+            </NavItem>
+            <NavItem>
+              <NavLink to="/event" tag={Link}>
+                電競
+              </NavLink>
+            </NavItem>
+            <NavItem>
+              <NavLink to="/event" tag={Link}>
                 活動
               </NavLink>
             </NavItem>

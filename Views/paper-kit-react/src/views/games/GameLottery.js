@@ -17,6 +17,7 @@
 
 */
 import React from "react";
+import ReactDOM from 'react-dom';
 
 // reactstrap components
 import {
@@ -46,13 +47,58 @@ function GameLottery() {
       setActiveTab(tab);
     }
   };
+  
   document.documentElement.classList.remove("nav-open");
+
   React.useEffect(() => {
     document.body.classList.add("landing-page");
     return function cleanup() {
       document.body.classList.remove("landing-page");
     };
   });
+
+  // 下注事件
+  function betEvent() {
+  
+    // 取得選取資料
+    var obj = document.querySelectorAll('.betarea_btn');
+    var tmp_data = "";
+    obj.forEach(d => {
+      if (d.className == "betarea_btn active") {
+        tmp_data += "1,";
+        d.classList.remove("active");
+      } else {
+        tmp_data += "0,";
+      }
+    })
+
+    // 共幾注 清零
+    ReactDOM.render("0",document.getElementById('bet_count'));
+    
+    // 投注金額 , 歸零
+    ReactDOM.render("0",document.getElementById('bet_amount'))
+  }
+
+  // 單注金額, 變更事件
+  function amountEvent() {
+        // 計算注數
+        var obj = document.querySelectorAll('.betarea_btn');
+        var bet_count = 0;
+        obj.forEach(d => {
+            if (d.className == "betarea_btn active") {
+                bet_count++;
+            } 
+        });
+        ReactDOM.render(bet_count,document.getElementById('bet_count'))
+        
+        // 計算下注金額
+        var amount = document.getElementById('amount').value;
+        if (amount == "") {
+            document.getElementById('amount').value = 1;
+        }
+        ReactDOM.render(amount*bet_count,document.getElementById('bet_amount'))
+  }
+
   return (
     <>
       <HomeNavbar />
@@ -93,7 +139,6 @@ function GameLottery() {
               borderRadius: "10px",
               boxShadow: "0 6px 10px -4px rgb(0 0 0 / 15%)",
               backgroundColor: "#efefef",
-              minHeight: "320px",
             }}>
               <Col md="12">
               <div className="nav-tabs-navigation">
@@ -134,7 +179,6 @@ function GameLottery() {
                 </TabPane>
                 <TabPane tabId="2">
                   <p>
-                    
                     大小單雙玩法區塊
                   </p>
                 </TabPane>
@@ -151,9 +195,25 @@ function GameLottery() {
               borderRadius: "10px",
               boxShadow: "0 6px 10px -4px rgb(0 0 0 / 15%)",
               backgroundColor: "#efefef",
-              minHeight: "120px",
+              minHeight: "80px",
             }}>
-              <Col md="12">投注</Col>
+              <Col md="12">
+                  <div className="pt-3">
+                  <Row>
+                      <Col md={2}><h5>共 <span id="bet_count">0</span> 注</h5></Col>
+                      <Col md={2}>
+                        <h5>單注金額 </h5>
+                      </Col>
+                      <Col md={2}><input type="text" id="amount" onChange={amountEvent} /></Col>
+                      <Col md={2}>
+                        <h5>共 <span id="bet_amount">0</span> 元</h5>
+                      </Col>
+                      <Col md={2}>
+                        <Button className="btn btn-danger" onClick={betEvent}>立即投注</Button>
+                      </Col>
+                    </Row>
+                  </div>
+              </Col>
             </Row>
             <Row style={{
               minHeight: "400px",

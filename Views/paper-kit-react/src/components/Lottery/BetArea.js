@@ -11,8 +11,9 @@ class BetArea extends React.Component {
     }
 
     render() {
+        const { forwardedRef } = this.props;
         return (
-            <div>
+            <div id="betarea_01" ref={forwardedRef}>
                 <Row>
                     <Col md={2} className="pt-2">萬位</Col>
                     <Col md={6} className="betarea">
