@@ -36,8 +36,13 @@ import {
 import HomeNavbar from "components/Navbars/HomeNavbar.js";
 import Header from "components/Headers/ThirdLottery.js";
 import HomeFooter from "components/Footers/HomeFooter.js";
-
 import BetArea from "components/Lottery/BetArea.js";
+import CycleCountdown from "components/Lottery/CycleCountdown.js";
+
+// ajax
+import axios from 'axios';
+import history from './../../history';
+import { toast } from 'react-toastify'; //import toast
 
 function GameLottery() {
 
@@ -51,10 +56,8 @@ function GameLottery() {
   document.documentElement.classList.remove("nav-open");
 
   React.useEffect(() => {
-    document.body.classList.add("landing-page");
-    return function cleanup() {
-      document.body.classList.remove("landing-page");
-    };
+
+      ReactDOM.render(<CycleCountdown /> , document.getElementById('counter'));
   });
 
   // 下注事件
@@ -63,13 +66,64 @@ function GameLottery() {
     // 取得選取資料
     var obj = document.querySelectorAll('.betarea_btn');
     var tmp_data = "";
+    var is_selected = false;
+    var count = 0;
     obj.forEach(d => {
       if (d.className == "betarea_btn active") {
         tmp_data += "1,";
         d.classList.remove("active");
+        is_selected = true;
+        count++;
       } else {
         tmp_data += "0,";
       }
+    })
+
+    if (!is_selected) {
+      toast.error("請選擇下注號碼");
+      return false;
+    }
+
+    // 單注金額
+    var amount = document.getElementById('amount').value;
+
+    // 取得選取的玩法
+    var game_type = document.querySelectorAll('#game_type');
+    var game_type_id = 1;
+    game_type.forEach(d => {
+      if (d.className == "active nav-link") {  
+        switch (d.innerHTML) {
+          case "定位膽":
+            game_type_id = 1;
+            break;
+          case "大小單雙":
+            game_type_id = 2;
+            break;
+          case "龍虎和":
+            game_type_id = 3;
+            break;
+        }
+      }
+    })
+
+    // 發送下注請求
+    axios.post('http://localhost:8080/api/lottery_bet',{
+      // 彩種
+      game_id:1,
+			// 玩法
+      game_type_id:game_type_id,
+			// 下注內容
+      bet_info: tmp_data,
+			// 單注金額
+      amount: amount,
+			// 注數
+      bet_count:count,
+    }).
+    then( response => {
+      console.log(response.data);
+
+      // 變更餘額
+      toast.success("下注成功！餘額：" + response.data.balance);
     })
 
     // 共幾注 清零
@@ -120,7 +174,7 @@ function GameLottery() {
                 }} />
               </Col>
               <Col md="5">
-                  <h4 className="mb-2">12345678期</h4>
+                  <h4 className="mb-2">第<span id="prev_cycle"></span>期</h4>
                   <div className="betarea">
                     <a className="result_num">0</a>
                     <a className="result_num">1</a>
@@ -130,8 +184,8 @@ function GameLottery() {
                   </div>
               </Col>
               <Col md="5">
-                  <h4>12345679期</h4>
-                  <h2 id="counter" className="mt-2">99:59:59</h2>
+                  <h4>第<span id="current_cycle"></span>期</h4>
+                  <h2 id="counter" className="mt-2"></h2>
               </Col>
             </Row>
             <Row style={{
@@ -145,7 +199,7 @@ function GameLottery() {
                 <div className="nav-tabs-wrapper">
                   <Nav id="tabs" role="tablist" tabs>
                     <NavItem>
-                      <NavLink id="type_1" className={activeTab === "1" ? "active" : ""} onClick={() => {
+                      <NavLink id="game_type" className={activeTab === "1" ? "active" : ""} onClick={() => {
                           toggle("1");
                         }}
                       >
@@ -153,7 +207,7 @@ function GameLottery() {
                       </NavLink>
                     </NavItem>
                     <NavItem>
-                      <NavLink id="type_2" className={activeTab === "2" ? "active" : ""}
+                      <NavLink id="game_type" className={activeTab === "2" ? "active" : ""}
                         onClick={() => {
                           toggle("2");
                         }}
@@ -162,7 +216,7 @@ function GameLottery() {
                       </NavLink>
                     </NavItem>
                     <NavItem>
-                      <NavLink id="type_3" className={activeTab === "3" ? "active" : ""}
+                      <NavLink id="game_type" className={activeTab === "3" ? "active" : ""}
                         onClick={() => {
                           toggle("3");
                         }}
@@ -200,6 +254,7 @@ function GameLottery() {
               <Col md="12">
                   <div className="pt-3">
                   <Row>
+                      <Col md={2}></Col>
                       <Col md={2}><h5>共 <span id="bet_count">0</span> 注</h5></Col>
                       <Col md={2}>
                         <h5>單注金額 </h5>

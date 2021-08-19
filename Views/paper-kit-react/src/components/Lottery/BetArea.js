@@ -15,7 +15,7 @@ class BetArea extends React.Component {
         return (
             <div id="betarea_01" ref={forwardedRef}>
                 <Row>
-                    <Col md={2} className="pt-2">萬位</Col>
+                    <Col md={2} className="pt-2"><h5>萬位</h5></Col>
                     <Col md={6} className="betarea">
                         <Btn value="0" />
                         <Btn value="1" />
@@ -30,7 +30,7 @@ class BetArea extends React.Component {
                     </Col>
                 </Row>
                 <Row>
-                    <Col md={2} className="pt-2">千位</Col>
+                    <Col md={2} className="pt-2"><h5>千位</h5></Col>
                     <Col md={6} className="betarea">
                         <Btn value="0" />
                         <Btn value="1" />
@@ -45,7 +45,7 @@ class BetArea extends React.Component {
                     </Col>
                 </Row>
                 <Row>
-                    <Col md={2} className="pt-2">百位</Col>
+                    <Col md={2} className="pt-2"><h5>百位</h5></Col>
                     <Col md={6} className="betarea">
                         <Btn value="0" />
                         <Btn value="1" />
@@ -60,7 +60,7 @@ class BetArea extends React.Component {
                     </Col>
                 </Row>
                 <Row>
-                    <Col md={2} className="pt-2">十位</Col>
+                    <Col md={2} className="pt-2"><h5>十位</h5></Col>
                     <Col md={6} className="betarea">
                         <Btn value="0" />
                         <Btn value="1" />
@@ -75,7 +75,7 @@ class BetArea extends React.Component {
                     </Col>
                 </Row>
                 <Row>
-                    <Col md={2} className="pt-2">個位</Col>
+                    <Col md={2} className="pt-2"><h5>個位</h5></Col>
                     <Col md={6} className="betarea">
                         <Btn value="0" />
                         <Btn value="1" />

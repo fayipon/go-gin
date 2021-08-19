@@ -153,6 +153,24 @@ func Setup() *gin.Engine {
 			})
 
 		})
+
+		// 取得彩票獎期資料
+		api.POST("/lottery_bet", func(c *gin.Context) {
+
+			// 彩種
+			// 玩法
+			// 期數
+			// 下注內容
+			// 單注金額
+			// 注數
+
+			c.JSON(http.StatusOK, gin.H{
+				"status":  "1",
+				"message": "投注成功！",
+				"balance": "999999",
+			})
+		})
+
 	}
 
 	return router

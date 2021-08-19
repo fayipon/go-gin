@@ -29,7 +29,6 @@ export default function BtnBetArea(props) {
         }
         ReactDOM.render(amount*bet_count,document.getElementById('bet_amount'))
         
-        console.log(amount);
     }
 
     return (
