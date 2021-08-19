@@ -1,21 +1,3 @@
-/*!
-
-=========================================================
-* Paper Kit React - v1.3.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/paper-kit-react
-
-* Copyright 2021 Creative Tim (https://www.creative-tim.com)
-* Licensed under MIT (https://github.com/creativetimofficial/paper-kit-react/blob/main/LICENSE.md)
-
-* Coded by Creative Tim
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
 import React from "react";
 import ReactDOM from 'react-dom';
 
@@ -77,6 +59,13 @@ function GameLottery() {
     var obj = document.querySelectorAll('.betareabsoe_btn');
     obj.forEach(d => {
       if (d.className == "betareabsoe_btn active") {
+        d.classList.remove("active");
+      }
+    })
+    
+    var obj = document.querySelectorAll('.betareadtbtn');
+    obj.forEach(d => {
+      if (d.className == "betareadt_btn active") {
         d.classList.remove("active");
       }
     })
