@@ -36,8 +36,10 @@ import {
 import HomeNavbar from "components/Navbars/HomeNavbar.js";
 import Header from "components/Headers/ThirdLottery.js";
 import HomeFooter from "components/Footers/HomeFooter.js";
-import BetArea from "components/Lottery/BetArea.js";
 import CycleCountdown from "components/Lottery/CycleCountdown.js";
+import BetArea from "components/Lottery/BetArea.js";
+import BetAreaBSOE from "components/Lottery/BetAreaBSOE.js";
+import BetAreaDT from "components/Lottery/BetAreaDT.js";
 
 // ajax
 import axios from 'axios';
@@ -50,7 +52,9 @@ function GameLottery() {
   const toggle = (tab) => {
     if (activeTab !== tab) {
       setActiveTab(tab);
+      cleanSelectBtn();
     }
+
   };
   
   document.documentElement.classList.remove("nav-open");
@@ -60,24 +64,95 @@ function GameLottery() {
       ReactDOM.render(<CycleCountdown /> , document.getElementById('counter'));
   });
 
+  // 清除已選按紐
+  function cleanSelectBtn() {
+    
+    var obj = document.querySelectorAll('.betarea_btn');
+    obj.forEach(d => {
+      if (d.className == "betarea_btn active") {
+        d.classList.remove("active");
+      }
+    })
+
+    var obj = document.querySelectorAll('.betareabsoe_btn');
+    obj.forEach(d => {
+      if (d.className == "betareabsoe_btn active") {
+        d.classList.remove("active");
+      }
+    })
+
+    // 共幾注 清零
+    ReactDOM.render("0",document.getElementById('bet_count'));
+    
+    // 投注金額 , 歸零
+    ReactDOM.render("0",document.getElementById('bet_amount'));
+  }
+
   // 下注事件
   function betEvent() {
   
     // 取得選取資料
-    var obj = document.querySelectorAll('.betarea_btn');
     var tmp_data = "";
     var is_selected = false;
     var count = 0;
-    obj.forEach(d => {
-      if (d.className == "betarea_btn active") {
-        tmp_data += "1,";
-        d.classList.remove("active");
-        is_selected = true;
-        count++;
-      } else {
-        tmp_data += "0,";
-      }
-    })
+
+    // 取得選取的玩法
+    var game_type_id = 1;
+    var game_type = document.querySelectorAll('#game_type');
+    game_type.forEach(d => {
+      if (d.className == "active nav-link") {  
+        switch (d.innerHTML) {
+           case "定位膽":
+             game_type_id = 1;
+
+             var obj = document.querySelectorAll('.betarea_btn');
+             obj.forEach(d => {
+               if (d.className == "betarea_btn active") {
+                 tmp_data += "1,";
+                 d.classList.remove("active");
+                 is_selected = true;
+                 count++;
+               } else {
+                 tmp_data += "0,";
+               }
+             })
+         
+             break;
+          case "大小單雙":
+            game_type_id = 2;
+
+            var obj = document.querySelectorAll('.betareabsoe_btn');
+            obj.forEach(d => {
+              if (d.className == "betareabsoe_btn active") {
+                tmp_data += "1,";
+                d.classList.remove("active");
+                is_selected = true;
+                count++;
+              } else {
+                tmp_data += "0,";
+              }
+            })
+
+            break;
+          case "龍虎和":
+            game_type_id = 3;
+            
+            var obj = document.querySelectorAll('.betareadt_btn');
+            obj.forEach(d => {
+              if (d.className == "betareadt_btn active") {
+                tmp_data += "1,";
+                d.classList.remove("active");
+                is_selected = true;
+                count++;
+              } else {
+                tmp_data += "0,";
+              }
+            })
+
+             break;
+        }
+       }
+     })
 
     if (!is_selected) {
       toast.error("請選擇下注號碼");
@@ -86,25 +161,6 @@ function GameLottery() {
 
     // 單注金額
     var amount = document.getElementById('amount').value;
-
-    // 取得選取的玩法
-    var game_type = document.querySelectorAll('#game_type');
-    var game_type_id = 1;
-    game_type.forEach(d => {
-      if (d.className == "active nav-link") {  
-        switch (d.innerHTML) {
-          case "定位膽":
-            game_type_id = 1;
-            break;
-          case "大小單雙":
-            game_type_id = 2;
-            break;
-          case "龍虎和":
-            game_type_id = 3;
-            break;
-        }
-      }
-    })
 
     // 發送下注請求
     axios.post('http://localhost:8080/api/lottery_bet',{
@@ -130,7 +186,7 @@ function GameLottery() {
     ReactDOM.render("0",document.getElementById('bet_count'));
     
     // 投注金額 , 歸零
-    ReactDOM.render("0",document.getElementById('bet_amount'))
+    ReactDOM.render("0",document.getElementById('bet_amount'));
   }
 
   // 單注金額, 變更事件
@@ -232,14 +288,10 @@ function GameLottery() {
                   <BetArea />
                 </TabPane>
                 <TabPane tabId="2">
-                  <p>
-                    大小單雙玩法區塊
-                  </p>
+                  <BetAreaBSOE />
                 </TabPane>
                 <TabPane tabId="3">
-                  <p>
-                    龍虎和玩法區塊
-                  </p>
+                  <BetAreaDT />
                 </TabPane>
               </TabContent>
               </Col>

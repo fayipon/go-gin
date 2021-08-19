@@ -654,7 +654,7 @@
   border-radius: .25rem;
 }
 
-.betarea_btn {
+.betarea_btn, .betareabsoe_btn, .betareadt_btn {
   background-color: transparent;
   border: 2px solid #f5593d;
   border-radius: 20px;
@@ -666,15 +666,16 @@
   font-weight: 600;
 }
 
-.betarea_btn:hover {
+.betarea_btn:hover , .betareabsoe_btn:hover , .betareadt_btn:hover {
   background-color: #f5593d;
   color: #fff;
 }
 
-.betarea_btn.active {
+.betarea_btn.active , .betareabsoe_btn.active , .betareadt_btn.active {
   background-color: #f5593d;
   color: #fff;
 }
+
 
 .result_num {
   background-color: #20397c;
