@@ -10,8 +10,7 @@ Server端
 Golang + Gin 
 
 Client端
-React + React-Bootstrap + Styled Components
-SPA 
+React + Reactrap
 
 
 # PATCHS & TODO
