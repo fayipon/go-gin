@@ -167,8 +167,11 @@ function GameLottery() {
     then( response => {
       console.log(response.data);
 
-      // 變更餘額
-      toast.success("下注成功！餘額：" + response.data.balance);
+      if (response.data.status == "1") {
+        toast.success("下注成功！餘額：" + response.data.balance);
+      } else {
+        toast.error(response.data.message);
+      }
     })
 
     // 共幾注 清零

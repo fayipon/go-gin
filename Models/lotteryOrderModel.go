@@ -6,17 +6,17 @@ import (
 
 type LotteryOrder struct {
 	gorm.Model
-	ID           int
-	GameId       string
-	GameTypeId   string
+	ID           int32
+	GameId       int8 `form:"game_id"`
+	GameTypeId   int8 `form:"game_type_id"`
 	GameCycle    string
-	UserId       int
+	UserId       int32
 	UserAccount  string
-	GameBetInfo  string
-	GameBetCount int
-	SingleAmount float32
+	GameBetInfo  string  `form:"bet_info"`
+	GameBetCount int8    `form:"bet_count"`
+	SingleAmount float32 `form:"amount"`
 	TotalAmount  float32
-	Status       int
+	Status       int8
 }
 
 //create a LotteryOrder

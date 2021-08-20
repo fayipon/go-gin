@@ -4,18 +4,13 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/fayipon/go-gin/Controller"
 	"github.com/gin-gonic/contrib/static"
 	"github.com/gin-gonic/gin"
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
 )
-
-// User 结构体定义
-type User struct {
-	Account  string `json:"account" form:"account"`
-	Password string `json:"password" form:"password"`
-}
 
 func Setup() *gin.Engine {
 
@@ -42,7 +37,10 @@ func Setup() *gin.Engine {
 	store := cookie.NewStore([]byte("gssecret"))
 	router.Use(sessions.Sessions("mysession", store))
 
-	//authController := Controller.NewAuthController()
+	authController := Controller.NewAuthController()
+	userController := Controller.NewUserController()
+	lotteryController := Controller.NewLotteryController()
+	walletController := Controller.NewWalletController()
 	//router.GET("/", authController.LoginPage)
 
 	// todo , 頁面使用的API
@@ -74,102 +72,15 @@ func Setup() *gin.Engine {
 			}
 		})
 
-		api.GET("/logout", func(c *gin.Context) {
+		api.GET("/logout", authController.Logout)
+		api.POST("/login", authController.Login)
 
-			// 初始化session对象
-			session := sessions.Default(c)
-			session.Set("auth", "0")
-			session.Save()
+		api.POST("/register", userController.Register)
+		api.GET("/get_user", userController.Test)
+		api.GET("/get_user_balance", walletController.Test)
 
-			c.JSON(http.StatusOK, gin.H{
-				"status":  "1",
-				"message": "已登出",
-			})
-		})
-
-		api.POST("/login", func(c *gin.Context) {
-
-			// 初始化user struct
-			u := User{}
-			if c.ShouldBind(&u) == nil {
-				// 绑定成功， 打印请求参数
-				log.Println(u.Account)
-				log.Println(u.Password)
-			}
-
-			if u.Account == "admin" && u.Password == "12345" {
-
-				// 初始化session
-				session := sessions.Default(c)
-
-				// 設置session
-				session.Set("account", u.Account)
-				session.Set("auth", "1")
-
-				// 保存session
-				session.Save()
-
-				c.JSON(http.StatusOK, gin.H{
-					"status":  "1",
-					"message": "success",
-					"account": "admin",
-					"balance": "999999",
-				})
-			} else {
-
-				c.JSON(http.StatusOK, gin.H{
-					"status":  "0",
-					"message": "帳號密碼錯誤！",
-				})
-			}
-
-		})
-
-		api.POST("/register", func(c *gin.Context) {
-
-			// 初始化user struct
-			u := User{}
-			if c.ShouldBind(&u) == nil {
-				// 绑定成功， 打印请求参数
-				log.Println(u.Account)
-				log.Println(u.Password)
-			}
-
-			// 初始化session
-			session := sessions.Default(c)
-
-			// 設置session
-			session.Set("account", u.Account)
-			session.Set("auth", "1")
-
-			// 保存session
-			session.Save()
-
-			c.JSON(http.StatusOK, gin.H{
-				"status":  "1",
-				"message": "success",
-				"account": "admin",
-				"balance": "999999",
-			})
-
-		})
-
-		// 取得彩票獎期資料
-		api.POST("/lottery_bet", func(c *gin.Context) {
-
-			// 彩種
-			// 玩法
-			// 期數
-			// 下注內容
-			// 單注金額
-			// 注數
-
-			c.JSON(http.StatusOK, gin.H{
-				"status":  "1",
-				"message": "投注成功！",
-				"balance": "999999",
-			})
-		})
+		// 投注接口
+		api.POST("/lottery_bet", lotteryController.CreateLotteryOrder)
 
 	}
 

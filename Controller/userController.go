@@ -2,11 +2,12 @@ package Controller
 
 import (
 	"errors"
+	"log"
 	"net/http"
 
 	database "github.com/fayipon/go-gin/Database/Mysql"
 	models "github.com/fayipon/go-gin/Models"
-	"github.com/gin-contrib/sessions"
+	sessions "github.com/gin-contrib/sessions"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
@@ -22,55 +23,90 @@ func NewUserController() *UserRepo {
 	return &UserRepo{Db: db}
 }
 
-// session test , count
-func (repository *UserRepo) SessionTest(c *gin.Context) {
+// test
+func (repository *UserRepo) Test(c *gin.Context) {
+	var user models.User
 
-	// 從 ctx 中取出 session
-	session := sessions.Default(c)
-	var count int
+	//result := repository.Db.Where("account = ?", "admin").First(&user)
 
-	// 取得 session 中的值
-	v := session.Get("count")
-	if v == nil {
-		count = 0
-	} else {
-		count = v.(int)
-		count++
-	}
+	//	var result Result
+	repository.Db.Raw("SELECT * FROM common_user where account=?", "admin1").Scan(&user)
 
-	// 設定 session 中的值（不會儲存）
-	session.Set("count", count)
+	log.Print(user)
 
-	// 儲存 session 中的值
-	session.Save()
-	c.JSON(200, gin.H{"count": count})
+	c.JSON(http.StatusOK, user)
 }
 
-// session test , count
-func (repository *UserRepo) SessionTestB(c *gin.Context) {
-
-	// 從 ctx 中取出 session
-	session := sessions.Default(c)
-
-	// 取得 session 中的值
-	v := session.Get("count")
-	if v == nil {
-		v = 0
-	}
-
-	c.JSON(200, gin.H{"count": v})
-}
-
-//create user
-func (repository *UserRepo) CreateUser(c *gin.Context) {
+// register User
+func (repository *UserRepo) Register(c *gin.Context) {
 	var user models.User
 	c.BindJSON(&user)
-	err := models.CreateUser(repository.Db, &user)
-	if err != nil {
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err})
+
+	/////////////////////////
+	// 判斷用戶是否已存在
+	var result models.User
+	repository.Db.Raw("SELECT id,account FROM common_user where account=?", user.Account).Scan(&result)
+	if result.Account != "" {
+		c.JSON(http.StatusOK, gin.H{
+			"status":  "0",
+			"message": "該帳號已被注冊, 請重試！",
+		})
 		return
 	}
-	c.JSON(http.StatusOK, user)
+
+	/////////////////////////
+	// 創建 用戶 & 錢包資料
+
+	// 用戶
+	err := models.CreateUser(repository.Db, &user)
+	if err != nil {
+		//	c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err})
+		c.JSON(http.StatusOK, gin.H{
+			"status":  "0",
+			"message": "注冊失敗, 創建用戶失敗",
+		})
+		return
+	}
+
+	/////////////////////
+	// 返回數據
+
+	var response models.User
+	repository.Db.Raw("SELECT id,account FROM common_user where account=?", user.Account).Scan(&response)
+
+	// 創建錢包
+	var wallet models.Wallet
+	wallet.ID = response.ID
+	wallet.Balance = 999999 // demo 用, 預設999999元
+	err2 := models.CreateWallet(repository.Db, &wallet)
+	if err2 != nil {
+		//	c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err})
+		c.JSON(http.StatusOK, gin.H{
+			"status":  "0",
+			"message": "注冊失敗, 創建錢包失敗",
+		})
+		return
+	}
+
+	// 初始化session 並設定已登入
+	session := sessions.Default(c)
+	session.Set("id", response.ID)
+	session.Set("account", response.Account)
+	session.Set("auth", "1")
+	session.Save()
+
+	c.JSON(http.StatusOK, gin.H{
+		"status":  "1",
+		"message": "注冊成功",
+		"id":      response.ID,
+		"account": response.Account,
+		"balance": 999999,
+	})
+
+}
+
+// User login
+func (repository *UserRepo) Login(c *gin.Context) {
 }
 
 //get users
