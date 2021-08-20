@@ -4,14 +4,16 @@
 
 這是一個以博奕綜合盤為雛型的project
 
-# go-gin
+# Time Lines
 
-Server端
-Golang + Gin 
-
-Client端
-React + Reactrap
-
+啟動       ✓ (2021/08/12)
+React前端  ✓ (2021/08/17)
+彩票時彩   ✓ (2021/08/19)
+真人   
+體育  
+電競  
+電子 
+棋牌  
 
 # PATCHS & TODO
 08/13 
