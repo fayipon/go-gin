@@ -4,9 +4,13 @@
 
 這是一個以博奕綜合盤為雛型的project
 
-由於我是React+Golang菜雞, 這玩意可以說是我第一個自作的Project
+由於我是React+Golang菜雞,加上這是一人開發 (solo mode)
+
+可以說是我第一個自作的React + golang Project
 
 若有什麼地方不太ok , 煩請告知,並請多多指教
+
+TG @fayitw
 
 # TimeLine
 
