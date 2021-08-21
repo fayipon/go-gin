@@ -6,8 +6,8 @@ package main
 
 import (
 	"log"
-	"time"
 
+	"github.com/fayipon/go-gin/Controller"
 	"github.com/robfig/cron"
 )
 
@@ -17,17 +17,9 @@ func main() {
 
 	c := cron.New()
 
-	// 每秒執行
-	c.AddFunc("* * * * * *", func() {
-		log.Println("Task 1 => ", time.Now().Format("2006-01-02 15:04:05"))
-	})
-
-	// 每分的00秒執行
-	c.AddFunc("00 * * * * *", func() {
-		log.Println("Task 2 => ", time.Now().Format("2006-01-02 15:04:05"))
-	})
-
-	// 每分00 秒, 彩票開獎
+	// 彩票開獎
+	lotteryController := Controller.NewLotteryController()
+	c.AddFunc("00 * * * * *", lotteryController.LotteryResult)
 
 	c.Start()
 	select {}

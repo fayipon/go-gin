@@ -1,6 +1,9 @@
 package Controller
 
 import (
+	"crypto/rand"
+	"log"
+	"math/big"
 	"net/http"
 	"regexp"
 	"strconv"
@@ -116,6 +119,37 @@ func (repository *LotteryOrderRepo) CreateLotteryOrder(c *gin.Context) {
 		"account": account,
 		"balance": after_balance,
 	})
+
+}
+
+// 定時任務 , 開獎腳本
+func (repository *LotteryOrderRepo) LotteryResult() {
+
+	//////////////////
+	// 計算當前期數
+	tm := time.Now().Add(-time.Minute * 1)
+	// 月日時分
+	cycle_value := tm.Format("01021504")
+
+	// 生成隨機號碼
+	var tmp string
+	for i := 0; i < 5; i++ {
+		result, _ := rand.Int(rand.Reader, big.NewInt(10))
+		tmp += result.String()
+	}
+	log.Println(cycle_value, tmp)
+
+	// TODO
+
+	// 抓取當期注單紀錄
+
+	// 寫入開獎號碼
+
+	// 根據game_type_id , 計算中幾注 中多少錢
+
+	// 更新用戶餘額
+
+	// 帳變寫入
 
 }
 

@@ -6,17 +6,20 @@ import (
 
 type LotteryOrder struct {
 	gorm.Model
-	ID           int32
-	GameId       int8   `json:"game_id" form:"game_id"`
-	GameTypeId   int8   `json:"game_type_id" form:"game_type_id"`
-	GameCycle    string `gorm:"size:32"`
-	UserId       int32
-	UserAccount  string  `gorm:"size:32"`
-	GameBetInfo  string  `json:"bet_info" form:"bet_info"`
-	GameBetCount int8    `json:"bet_count" form:"bet_count"`
-	SingleAmount float32 `json:"single_amount" form:"single_amount"`
-	TotalAmount  float32
-	Status       int8
+	ID              int32
+	GameId          int8   `json:"game_id" form:"game_id"`
+	GameTypeId      int8   `json:"game_type_id" form:"game_type_id"`
+	GameCycle       string `gorm:"size:32"`
+	GameCycleResult string `gorm:"size:32"`
+	UserId          int32
+	UserAccount     string `gorm:"size:32"`
+	GameBetInfo     string `json:"bet_info" form:"bet_info"`
+	GameBetCount    int8   `json:"bet_count" form:"bet_count"`
+	GameResultCount int8
+	SingleAmount    float32 `json:"single_amount" form:"single_amount"`
+	TotalAmount     float32
+	ResultAmount    float32
+	Status          int8
 }
 
 // TableName
