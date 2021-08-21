@@ -224,11 +224,11 @@ function GameLottery() {
               <Col md="5">
                   <h4 className="mb-2">第<span id="prev_cycle"></span>期</h4>
                   <div className="betarea">
-                    <a className="result_num">0</a>
-                    <a className="result_num">1</a>
-                    <a className="result_num">2</a>
-                    <a className="result_num">3</a>
-                    <a className="result_num">4</a>
+                    <a className="result_num" id="result_num_01">?</a>
+                    <a className="result_num" id="result_num_02">?</a>
+                    <a className="result_num" id="result_num_03">?</a>
+                    <a className="result_num" id="result_num_04">?</a>
+                    <a className="result_num" id="result_num_05">?</a>
                   </div>
               </Col>
               <Col md="5">

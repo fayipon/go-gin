@@ -60,6 +60,9 @@ func Setup() *gin.Engine {
 		// 投注接口
 		api.POST("/lottery_bet", lotteryController.CreateLotteryOrder)
 
+		// 取得開獎號碼
+		api.POST("/lottery_result", lotteryController.GetLotteryResult)
+
 	}
 
 	return router

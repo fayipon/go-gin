@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { isThrowStatement } from 'typescript';
+import axios from 'axios';
 
 class CycleCountdown extends React.Component {
 
@@ -33,7 +33,7 @@ class CycleCountdown extends React.Component {
         if (seconds == "59") {
           this.setCycle();
         }
-        
+
         let obj = {
         "h": hours,
         "m": minutes,
@@ -58,9 +58,29 @@ class CycleCountdown extends React.Component {
     if ((cycle < 100) && (cycle > 10)) cycle = "00" + cycle;
     if ((cycle < 10) && (cycle > 0)) cycle = "000" + cycle;
 
-    var current_cycle = year + month + day + cycle;
+    var current_cycle = month + day + cycle;
     ReactDOM.render(current_cycle, document.getElementById('current_cycle'));
     ReactDOM.render(current_cycle-1, document.getElementById('prev_cycle'));
+
+    // 抓取獎期
+    ReactDOM.render("?", document.getElementById('result_num_01'));
+    ReactDOM.render("?", document.getElementById('result_num_02'));
+    ReactDOM.render("?", document.getElementById('result_num_03'));
+    ReactDOM.render("?", document.getElementById('result_num_04'));
+    ReactDOM.render("?", document.getElementById('result_num_05'));
+
+    axios.post('http://localhost:8080/api/lottery_result').
+    then( response => {
+      if (response.data.status == "1") {
+        var lottery_result = response.data.result.split("");
+        ReactDOM.render(lottery_result[0], document.getElementById('result_num_01'));
+        ReactDOM.render(lottery_result[1], document.getElementById('result_num_02'));
+        ReactDOM.render(lottery_result[2], document.getElementById('result_num_03'));
+        ReactDOM.render(lottery_result[3], document.getElementById('result_num_04'));
+        ReactDOM.render(lottery_result[4], document.getElementById('result_num_05'));
+      } 
+    })
+
   } 
 
   componentDidMount() {

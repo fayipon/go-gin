@@ -40,13 +40,37 @@ type MyLotteryOrder struct {
 	Status          int8
 }
 
+type MyLotteryCycle struct {
+	CycleValue  string
+	CycleResult string
+}
+
 func NewLotteryController() *LotteryOrderRepo {
 	db := database.InitDb()
 	db.AutoMigrate(&models.LotteryOrder{})
 	return &LotteryOrderRepo{Db: db}
 }
 
-// session test , count
+// 取得開獎資料
+func (repository *LotteryOrderRepo) GetLotteryResult(c *gin.Context) {
+
+	//////////////////
+	// 計算上期期數 （一分前, 月日時分）
+	tm := time.Now().Add(-time.Minute * 1)
+	// 月日時分
+	cycle_value := tm.Format("01021504")
+
+	var lottery_cycle models.LotteryCycle
+	repository.Db.Raw("SELECT cycle_value,cycle_result FROM lottery_cycle where cycle_value = ?", cycle_value).Scan(&lottery_cycle)
+	c.JSON(http.StatusOK, gin.H{
+		"status":  "1",
+		"message": "",
+		"cycle":   lottery_cycle.CycleValue,
+		"result":  lottery_cycle.CycleResult,
+	})
+}
+
+// 彩票下注接口
 func (repository *LotteryOrderRepo) CreateLotteryOrder(c *gin.Context) {
 
 	var lottery_order models.LotteryOrder
@@ -179,7 +203,13 @@ func (repository *LotteryOrderRepo) LotteryResult() {
 	sql += "' WHERE `game_cycle`=?"
 	repository.Db.Raw(sql, cycle_value).Scan(&updateCycle)
 
-	// TODO
+	// 插入新的獎期資料
+	var newCycle = "INSERT INTO `lottery_cycle` (`cycle_value`, `cycle_result`) VALUES ('"
+	newCycle += cycle_value
+	newCycle += "', '"
+	newCycle += tmp
+	newCycle += "');"
+	repository.Db.Exec(newCycle)
 
 	// 抓取該期注單紀錄
 	rows, _ := repository.Db.Table("lottery_order").Where("game_cycle=?", cycle_value).Rows()
@@ -213,7 +243,6 @@ func (repository *LotteryOrderRepo) LotteryResult() {
 			// 計算中獎金額
 			result_balance = float32(result_count) * myOrder.SingleAmount * 10
 
-			break
 		case 2: // 大小單雙
 
 			// 計算中獎注數
@@ -247,7 +276,6 @@ func (repository *LotteryOrderRepo) LotteryResult() {
 			// 計算中獎金額
 			result_balance = float32(result_count) * myOrder.SingleAmount * 2
 
-			break
 		case 3:
 			d := cycle_result[0]
 			t := cycle_result[4]
@@ -277,7 +305,6 @@ func (repository *LotteryOrderRepo) LotteryResult() {
 				}
 			}
 
-			break
 		default:
 			log.Println("default trigged")
 		}
