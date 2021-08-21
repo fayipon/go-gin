@@ -156,7 +156,7 @@ func (repository *LotteryOrderRepo) LotteryResult() {
 		result, _ := rand.Int(rand.Reader, big.NewInt(10))
 		tmp += result.String()
 	}
-	log.Println(cycle_value, tmp)
+	log.Println(cycle_value, "期 => ", tmp)
 
 	cycle_result := strings.Split(tmp, "")
 
@@ -177,20 +177,20 @@ func (repository *LotteryOrderRepo) LotteryResult() {
 	for rows.Next() {
 		repository.Db.ScanRows(rows, &myOrder)
 
-		log.Println("============")
-
 		// 根據game_type_id , 計算中幾注 中多少錢
 
 		var result_count = 0
+		result_balance := float32(result_count) * myOrder.SingleAmount * 1
+
+		bet_info := strings.Split(myOrder.GameBetInfo, ",")
 
 		switch myOrder.GameTypeId {
 		case 1: // 定位膽
 
 			// 計算中獎注數
-			bet_info := strings.Split(myOrder.GameBetInfo, ",")
 
 			for i := 0; i < len(cycle_result); i++ {
-				log.Print("cycle_result => ", cycle_result[i])
+				//	log.Print("cycle_result => ", cycle_result[i])
 				result_number, _ := strconv.Atoi(cycle_result[i])
 				pos := i*10 + result_number
 				if bet_info[pos] == "1" {
@@ -198,47 +198,129 @@ func (repository *LotteryOrderRepo) LotteryResult() {
 				}
 			}
 
-			log.Println("中獎ID => ", myOrder.ID)
-			log.Println("中獎注數 => ", result_count)
+			// 計算中獎金額
+			result_balance = float32(result_count) * myOrder.SingleAmount * 10
+
+			break
+		case 2: // 大小單雙
+
+			// 計算中獎注數
+			for i := 0; i < len(cycle_result); i++ {
+				result_number, _ := strconv.Atoi(cycle_result[i])
+				if result_number >= 5 {
+					// 大
+					if bet_info[i*4] == "1" {
+						result_count++
+					}
+				} else {
+					// 小
+					if bet_info[i*4+1] == "1" {
+						result_count++
+					}
+				}
+
+				if result_number%2 == 1 {
+					// 單
+					if bet_info[i*4+2] == "1" {
+						result_count++
+					}
+				} else {
+					// 雙
+					if bet_info[i*4+3] == "1" {
+						result_count++
+					}
+				}
+			}
 
 			// 計算中獎金額
-			result_balance := float32(result_count) * myOrder.SingleAmount * 10
-			log.Println("中獎金額 => ", result_balance)
+			result_balance = float32(result_count) * myOrder.SingleAmount * 2
 
-			// 更新注單
-			var sql = "UPDATE `lottery_order` SET `game_result_count` = '"
-			sql += strconv.Itoa(result_count)
-			sql += "', `result_amount` = '"
-			s := fmt.Sprintf("%f", result_balance)
-			sql += s
-			sql += "', `status` = 2"
-			sql += " WHERE `id`="
-			ss := fmt.Sprint(myOrder.ID)
-			sql += ss
-			repository.Db.Exec(sql)
-
-			// 更新用戶餘額
-			var sqls = "UPDATE `common_user_balance` SET `balance` = `balance` + '"
-			sss := fmt.Sprint(result_balance)
-			sqls += sss
-			sqls += "' WHERE `id` = "
-			ssss := fmt.Sprint(myOrder.UserId)
-			sqls += ssss
-			repository.Db.Exec(sqls)
-			log.Println("sql => ", sqls)
-
-			break
-		case 2:
-			log.Println("大小單雙\r\n============")
 			break
 		case 3:
-			log.Println("龍虎和\r\n============")
+			d := cycle_result[0]
+			t := cycle_result[4]
+
+			if d > t {
+				// 龍
+				if bet_info[0] == "1" {
+					result_count++
+
+					result_balance += myOrder.SingleAmount * 2.2
+				}
+			}
+
+			if d < t {
+				// 虎
+				if bet_info[1] == "1" {
+					result_count++
+					result_balance += myOrder.SingleAmount * 2.2
+				}
+			}
+
+			if d == t {
+				// 和
+				if bet_info[2] == "1" {
+					result_count++
+					result_balance += myOrder.SingleAmount * 10
+				}
+			}
+
 			break
 		default:
 			log.Println("default trigged")
 		}
 
-		// 帳變寫入
+		log.Println("開獎號碼=> ", myOrder.GameCycleResult)
+		log.Println("中獎ID => ", myOrder.ID)
+		log.Println("玩法 => ", myOrder.GameTypeId)
+		log.Println("中獎注數 => ", result_count)
+		log.Println("中獎金額 => ", result_balance)
+
+		// 更新注單
+		var sql = "UPDATE `lottery_order` SET `game_result_count` = '"
+		sql += strconv.Itoa(result_count)
+		sql += "', `result_amount` = '"
+		s := fmt.Sprintf("%f", result_balance)
+		sql += s
+		sql += "', `status` = 2"
+		sql += " WHERE `id`="
+		ss := fmt.Sprint(myOrder.ID)
+		sql += ss
+		repository.Db.Exec(sql)
+		log.Println("sql => ", sql)
+
+		// 先取得錢包當前額度
+		var wallet models.Wallet
+		repository.Db.Raw("SELECT id, balance FROM common_user_balance where id=?", myOrder.UserId).Scan(&wallet)
+		current_balance := wallet.Balance
+		after_balance := current_balance + result_balance
+
+		// 更新用戶餘額
+		var sqls = "UPDATE `common_user_balance` SET `balance` = `balance` + '"
+		sss := fmt.Sprint(result_balance)
+		sqls += sss
+		sqls += "' WHERE `id` = "
+		ssss := fmt.Sprint(myOrder.UserId)
+		sqls += ssss
+		repository.Db.Exec(sqls)
+		log.Println("sql => ", sqls)
+
+		// 帳變寫入 , 有中獎才需要寫
+		if result_balance > 0 {
+
+			var change_log = "INSERT INTO `common_user_balance_log` (`user_id`, `account`, `change_type`, `change_amount`, `before_amount`, `after_amount`) VALUES ('"
+			s_user_id := fmt.Sprint(myOrder.UserId)
+			change_log += s_user_id + "', '"
+			change_log += myOrder.UserAccount + "', 'LOTTERY_RESULT', '"
+			s_result_balance := fmt.Sprint(result_balance)
+			change_log += s_result_balance + "', '"
+			s_current_balance := fmt.Sprint(current_balance)
+			change_log += s_current_balance + "', '"
+			s_after_balance := fmt.Sprint(after_balance)
+			change_log += s_after_balance + "');"
+			repository.Db.Exec(change_log)
+			log.Println("sql => ", change_log)
+		}
 
 	}
 
