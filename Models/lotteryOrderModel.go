@@ -7,16 +7,21 @@ import (
 type LotteryOrder struct {
 	gorm.Model
 	ID           int32
-	GameId       int8 `form:"game_id"`
-	GameTypeId   int8 `form:"game_type_id"`
-	GameCycle    string
+	GameId       int8   `json:"game_id" form:"game_id"`
+	GameTypeId   int8   `json:"game_type_id" form:"game_type_id"`
+	GameCycle    string `gorm:"size:32"`
 	UserId       int32
-	UserAccount  string
-	GameBetInfo  string  `form:"bet_info"`
-	GameBetCount int8    `form:"bet_count"`
-	SingleAmount float32 `form:"amount"`
+	UserAccount  string  `gorm:"size:32"`
+	GameBetInfo  string  `json:"bet_info" form:"bet_info"`
+	GameBetCount int8    `json:"bet_count" form:"bet_count"`
+	SingleAmount float32 `json:"single_amount" form:"single_amount"`
 	TotalAmount  float32
 	Status       int8
+}
+
+// TableName
+func (LotteryOrder) TableName() string {
+	return "lottery_order"
 }
 
 //create a LotteryOrder

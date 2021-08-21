@@ -31,6 +31,7 @@ func (repository *WalletRepo) GetUserBalance(c *gin.Context) {
 			"status":  "0",
 			"message": "未登入",
 		})
+		return
 	}
 
 	user_id := session.Get("id")
@@ -43,9 +44,4 @@ func (repository *WalletRepo) GetUserBalance(c *gin.Context) {
 		"message": "已登入",
 		"balance": wallet.Balance,
 	})
-}
-
-// session test , count
-func (repository *WalletRepo) CreateWallet(c *gin.Context) {
-
 }

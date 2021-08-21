@@ -149,7 +149,8 @@ function GameLottery() {
     }
 
     // 單注金額
-    var amount = document.getElementById('amount').value;
+    var single_amount = parseFloat(document.getElementById('amount').value);
+    
 
     // 發送下注請求
     axios.post('http://localhost:8080/api/lottery_bet',{
@@ -160,7 +161,7 @@ function GameLottery() {
 			// 下注內容
       bet_info: tmp_data,
 			// 單注金額
-      amount: amount,
+      single_amount: single_amount,
 			// 注數
       bet_count:count,
     }).
