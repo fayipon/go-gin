@@ -19,15 +19,19 @@ func Setup() *gin.Engine {
 	// 雖說是spa, 但每一頁都需要設定, 不然重整會出現404
 	router.Use(static.Serve("/", static.LocalFile("./Views/paper-kit-react/build", true)))
 	router.Use(static.Serve("/home", static.LocalFile("./Views/paper-kit-react/build", true)))
-	router.Use(static.Serve("/sport", static.LocalFile("./Views/paper-kit-react/build", true)))
-	router.Use(static.Serve("/lottery", static.LocalFile("./Views/paper-kit-react/build", true)))
-	router.Use(static.Serve("/slot", static.LocalFile("./Views/paper-kit-react/build", true)))
-	router.Use(static.Serve("/esport", static.LocalFile("./Views/paper-kit-react/build", true)))
-	router.Use(static.Serve("/chess", static.LocalFile("./Views/paper-kit-react/build", true)))
 	router.Use(static.Serve("/register", static.LocalFile("./Views/paper-kit-react/build", true)))
 	router.Use(static.Serve("/login", static.LocalFile("./Views/paper-kit-react/build", true)))
 	router.Use(static.Serve("/logout", static.LocalFile("./Views/paper-kit-react/build", true)))
+
+	router.Use(static.Serve("/sport", static.LocalFile("./Views/paper-kit-react/build", true)))
+	router.Use(static.Serve("/lottery", static.LocalFile("./Views/paper-kit-react/build", true)))
+	router.Use(static.Serve("/baccarat", static.LocalFile("./Views/paper-kit-react/build", true)))
+	router.Use(static.Serve("/slot", static.LocalFile("./Views/paper-kit-react/build", true)))
+	router.Use(static.Serve("/esport", static.LocalFile("./Views/paper-kit-react/build", true)))
+	router.Use(static.Serve("/chess", static.LocalFile("./Views/paper-kit-react/build", true)))
+
 	router.Use(static.Serve("/game/lottery", static.LocalFile("./Views/paper-kit-react/build", true)))
+	router.Use(static.Serve("/game/baccarat", static.LocalFile("./Views/paper-kit-react/build", true)))
 	router.Use(static.Serve("/game/sport", static.LocalFile("./Views/paper-kit-react/build", true)))
 	router.Use(static.Serve("/game/slot", static.LocalFile("./Views/paper-kit-react/build", true)))
 	router.Use(static.Serve("/game/chess", static.LocalFile("./Views/paper-kit-react/build", true)))
@@ -38,8 +42,8 @@ func Setup() *gin.Engine {
 
 	authController := Controller.NewAuthController()
 	userController := Controller.NewUserController()
-	lotteryController := Controller.NewLotteryController()
 	walletController := Controller.NewWalletController()
+	lotteryController := Controller.NewLotteryController()
 	//router.GET("/", authController.LoginPage)
 
 	// todo , 頁面使用的API

@@ -17,6 +17,7 @@
     "react-router-dom": "5.2.0",
     "react-scripts": "4.0.3",
     "react-toastify": "^7.0.4",
+    "react-youtube-background": "^1.0.0",
     "reactstrap": "8.9.0"
   },
   "scripts": {

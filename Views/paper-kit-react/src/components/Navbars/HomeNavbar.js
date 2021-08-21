@@ -133,13 +133,18 @@ function ExamplesNavbar() {
         >
           <Nav navbar>
             <NavItem>
-              <NavLink to="/sport" tag={Link}>
-                體育
+              <NavLink to="/lottery" tag={Link}>
+                彩票
               </NavLink>
             </NavItem>
             <NavItem>
-              <NavLink to="/lottery" tag={Link}>
-                彩票
+              <NavLink to="/baccarat" tag={Link}>
+                真人
+              </NavLink>
+            </NavItem>
+            <NavItem>
+              <NavLink to="/sport" tag={Link}>
+                體育
               </NavLink>
             </NavItem>
             <NavItem>
@@ -150,11 +155,6 @@ function ExamplesNavbar() {
             <NavItem>
               <NavLink to="/chess" tag={Link}>
                 棋牌
-              </NavLink>
-            </NavItem>
-            <NavItem>
-              <NavLink to="/event" tag={Link}>
-                真人
               </NavLink>
             </NavItem>
             <NavItem>

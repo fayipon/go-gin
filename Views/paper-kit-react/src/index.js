@@ -28,6 +28,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import "bootstrap/scss/bootstrap.scss";
 import "assets/scss/paper-kit.scss?v=1.3.0";
 import "assets/demo/demo.css?v=1.3.0";
+
 // pages
 import Index from "views/Index.js";
 import LandingPage from "views/examples/LandingPage.js";
@@ -38,12 +39,14 @@ import Home from "views/pages/Home.js";
 import SportPage from "views/pages/Sport.js";
 import LotteryPage from "views/pages/Lottery.js";
 import SlotPage from "views/pages/Slot.js";
+import BaccaratPage from "views/pages/Baccarat";
 import ChessPage from "views/pages/Chess.js";
 import LoginPage from "views/pages/Login.js";
 import RegisterPage from "views/pages/Register.js";
 
 // game
 import GameLottery from "views/games/GameLottery.js";
+import GameBaccarat from "views/games/GameBaccarat.js";
 
 // others
 import history from './history';
@@ -65,15 +68,16 @@ ReactDOM.render(
         <Route path="/index" render={(props) => <Index {...props} />} />
         <Route path="/landing-page" render={(props) => <LandingPage {...props} />} />
         <Route path="/profile-page" render={(props) => <ProfilePage {...props} />} />
-
         
         <Route path="/game/lottery" render={(props) => <GameLottery {...props} />} />
+        <Route path="/game/baccarat" render={(props) => <GameBaccarat {...props} />} />
 
         <Route path="/register" render={(props) => <RegisterPage {...props} />} />
         <Route path="/login" render={(props) => <LoginPage {...props} />} />
         <Route path="/event" render={(props) => <SlotPage {...props} />} />
         <Route path="/chess" render={(props) => <ChessPage {...props} />} />
         <Route path="/slot" render={(props) => <SlotPage {...props} />} />
+        <Route path="/baccarat" render={(props) => <BaccaratPage {...props} />} />
         <Route path="/lottery" render={(props) => <LotteryPage {...props} />} />
         <Route path="/sport" render={(props) => <SportPage {...props} />} />
         <Route path="/home" render={(props) => <Home {...props} />} />
