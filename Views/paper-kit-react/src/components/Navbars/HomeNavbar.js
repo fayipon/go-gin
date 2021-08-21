@@ -17,6 +17,7 @@
 
 */
 import React from "react";
+import ReactDOM from 'react-dom';
 import { Link } from "react-router-dom";
 // nodejs library that concatenates strings
 import classnames from "classnames";
@@ -39,11 +40,15 @@ import {
 
 // check User is login
 function checkUserLogin() {
-  axios.get('http://localhost:8080/api/session').
+  axios.get('http://localhost:8080/api/get_user_balance').
   then( response => {
       if (response.data.status == "0") {
           // 未登入 , 跳轉到登入
           history.push('/login');
+      } else {
+          // 更新餘額
+          
+        ReactDOM.render(response.data.balance,document.getElementById('user_balance'))
       } 
   })
 }
@@ -172,6 +177,13 @@ function ExamplesNavbar() {
               >
                 <i className="fa fa-github" />
                 <p className="d-lg-none">GitHub</p>
+              </NavLink>
+            </NavItem>
+            <NavItem>
+              <NavLink
+                data-placement="bottom"
+              >
+                <p className="">餘額 : <span id="user_balance">999999</span></p>
               </NavLink>
             </NavItem>
             <NavItem>

@@ -1,7 +1,6 @@
 package Routers
 
 import (
-	"log"
 	"net/http"
 
 	"github.com/fayipon/go-gin/Controller"
@@ -48,36 +47,15 @@ func Setup() *gin.Engine {
 	{
 		api.GET("/", func(c *gin.Context) {
 			c.JSON(http.StatusOK, gin.H{
-				"message": "pong",
+				"message": "api list todo",
 			})
-		})
-
-		api.GET("/session", func(c *gin.Context) {
-
-			// 初始化session对象
-			session := sessions.Default(c)
-
-			log.Println(session.Get("auth"))
-
-			if session.Get("auth") == "1" {
-				c.JSON(http.StatusOK, gin.H{
-					"status":  "1",
-					"message": "已登入",
-				})
-			} else {
-				c.JSON(http.StatusOK, gin.H{
-					"status":  "0",
-					"message": "未登入",
-				})
-			}
 		})
 
 		api.GET("/logout", authController.Logout)
 		api.POST("/login", authController.Login)
 
 		api.POST("/register", userController.Register)
-		api.GET("/get_user", userController.Test)
-		api.GET("/get_user_balance", walletController.Test)
+		api.GET("/get_user_balance", walletController.GetUserBalance)
 
 		// 投注接口
 		api.POST("/lottery_bet", lotteryController.CreateLotteryOrder)

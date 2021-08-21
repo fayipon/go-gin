@@ -1,12 +1,15 @@
 package Controller
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 
 	database "github.com/fayipon/go-gin/Database/Mysql"
 	models "github.com/fayipon/go-gin/Models"
 	sessions "github.com/gin-contrib/sessions"
+
+	"crypto/md5"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
@@ -51,24 +54,31 @@ func (repository *AuthRepo) Login(c *gin.Context) {
 		log.Println(u.Password)
 	}
 
-	if u.Account == "admin" && u.Password == "12345" {
+	var result models.User
+	repository.Db.Raw("SELECT * FROM common_user where account=?", u.Account).Scan(&result)
+
+	if u.Account == result.Account && md5password(u.Password) == result.Password {
 
 		// 初始化session
 		session := sessions.Default(c)
 
 		// 設置session
-		session.Set("id", "1")
-		session.Set("account", u.Account)
+		session.Set("id", result.ID)
+		session.Set("account", result.Account)
 		session.Set("auth", "1")
 
 		// 保存session
 		session.Save()
 
+		// 取得餘額
+		var wallet models.Wallet
+		repository.Db.Raw("SELECT * FROM common_user_balance where id=?", result.ID).Scan(&wallet)
+
 		c.JSON(http.StatusOK, gin.H{
 			"status":  "1",
 			"message": "success",
 			"account": "admin",
-			"balance": "999999",
+			"balance": wallet.Balance,
 		})
 	} else {
 
@@ -77,4 +87,12 @@ func (repository *AuthRepo) Login(c *gin.Context) {
 			"message": "帳號密碼錯誤！",
 		})
 	}
+}
+
+// MD5 Password
+func md5password(password string) string {
+	data := []byte(password)
+	has := md5.Sum(data)
+	md5str := fmt.Sprintf("%x", has) //将[]byte转成16进制
+	return md5str
 }

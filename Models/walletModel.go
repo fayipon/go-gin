@@ -7,7 +7,7 @@ import (
 type Wallet struct {
 	gorm.Model
 	ID      int32
-	Balance float32
+	Balance float32 `gorm:"default:0"`
 }
 
 // TableName
