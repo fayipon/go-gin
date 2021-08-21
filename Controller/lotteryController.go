@@ -130,7 +130,19 @@ func (repository *LotteryOrderRepo) CreateLotteryOrder(c *gin.Context) {
 
 	repository.Db.Raw(sql, user_id).Scan(&deduction)
 
-	// 添加帳變紀錄 todo
+	// 添加帳變紀錄
+	var change_log = "INSERT INTO `common_user_balance_log` (`user_id`, `account`, `change_type`, `change_amount`, `before_amount`, `after_amount`) VALUES ('"
+	s_user_id := fmt.Sprint(user_id)
+	change_log += s_user_id + "', '"
+	s_account := fmt.Sprint(account)
+	change_log += s_account + "', 'LOTTERY_BET', '"
+	s_result_balance := fmt.Sprint(change_balance)
+	change_log += s_result_balance + "', '"
+	s_current_balance := fmt.Sprint(before_balance)
+	change_log += s_current_balance + "', '"
+	s_after_balance := fmt.Sprint(after_balance)
+	change_log += s_after_balance + "');"
+	repository.Db.Exec(change_log)
 
 	c.JSON(200, gin.H{
 		"status":  "1",
