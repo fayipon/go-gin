@@ -61,3 +61,7 @@ TG @fayitw
 1. 注冊優化, 現在會判斷用戶是否存在
 2. 新增wallet 表, 注冊時即產生新紀錄
 3. 預設用戶餘額 999999
+
+8/21
+1. remove View/React-bootstarp目錄 
+2. login接口現在會回傳數據庫裡的正確餘額
