@@ -166,10 +166,9 @@ function GameLottery() {
       bet_count:count,
     }).
     then( response => {
-      console.log(response.data);
-
       if (response.data.status == "1") {
         toast.success("下注成功！餘額：" + response.data.balance);
+        ReactDOM.render(response.data.balance,document.getElementById('user_balance'))
       } else {
         toast.error(response.data.message);
       }
