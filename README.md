@@ -20,7 +20,7 @@ TG @fayitw
 ![image](https://github.com/fayipon/go-gin/blob/main/Demo/001.jpg?raw=true)
 ![image](https://github.com/fayipon/go-gin/blob/main/Demo/002.jpg?raw=true)
 
- ✓ 彩票時彩  (2021/08/19)
+ ✓ 彩票時彩  (2021/08/21 完善)
 ![image](https://github.com/fayipon/go-gin/blob/main/Demo/003.jpg?raw=true)
 ![image](https://github.com/fayipon/go-gin/blob/main/Demo/004.jpg?raw=true)
 
@@ -68,3 +68,4 @@ TG @fayitw
 3. lottery_bet 接口 , 現在會正確扣款, 並更新餘額
 4. 新增定時任務機制 , 現在彩票會正確派獎
 5. 新增帳變紀錄 , 現在彩票下注及派獎, 都會產生帳變紀錄
+6. 彩票頁,現在會正確更新獎期
