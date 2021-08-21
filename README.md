@@ -66,3 +66,4 @@ TG @fayitw
 1. remove View/React-bootstarp目錄 
 2. login接口現在會回傳數據庫裡的正確餘額
 3. lottery_bet 接口 , 現在會正確扣款, 並更新餘額
+4. 新增定時任務機制
