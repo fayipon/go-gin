@@ -698,3 +698,77 @@
   font-size:16px;
 }
 
+.baccarat_bet_area {
+  border:1px #dfa4c1 solid;
+  width:100px;
+  height:120px;
+  margin-right: 10px;
+}
+
+.baccarat_bet_area:hover {
+  border:1px #22f83f solid;	
+  box-shadow: 0 0 15px 5px rgb(21, 124, 38);
+}
+
+.baccarat_bet_area h2 {
+  margin-top: 20%;
+  margin-left: 25%;
+}
+
+.baccarat_bet_area span {
+  margin-left: 37%;
+}
+
+.chip1, .chip2, .chip3 , .chip4, .chip5 {
+  width: 60px;
+  height: 60px;
+  background-repeat: unset;
+  background-size: 310%;
+  background-image: url('assets/img/poker/chips.png');
+  background-position: -60px -100px;
+  text-align: center;
+  line-height: 65px;
+  color: #333838;
+  font-size: 14px;
+  font-weight: bold;
+  margin-left:5px;
+}
+
+.chip1:hover, .chip1.active {
+  color: #0aa3dd;
+  background-image: url('assets/img/poker/chips.png');
+  background-position: -8px -20px;
+}
+
+.chip2:hover, .chip2.active {
+  color: #e2221c;
+  background-image: url('assets/img/poker/chips.png');
+  background-position: -63px -20px;
+}
+
+.chip3:hover, .chip3.active {
+  color: #060707;
+  background-image: url('assets/img/poker/chips.png');
+  background-position: -118px -20px;
+}
+
+.chip4:hover, .chip4.active {
+  color: #145525;
+  background-image: url('assets/img/poker/chips.png');
+  background-position: -8px -100px;
+}
+
+.chip5:hover, .chip5.active {
+  color: #e45917;
+  background-image: url('assets/img/poker/chips.png');
+  background-position: -114px -99px;
+}
+
+.player_bet_input, .tie_bet_input, .banker_bet_input {
+  background: transparent;
+    border: 0px;
+    text-align: center;
+    width: 98px;
+    margin-top: 8px;
+    color: #fff;
+}

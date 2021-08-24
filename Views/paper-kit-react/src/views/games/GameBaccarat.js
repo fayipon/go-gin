@@ -15,6 +15,7 @@ import Header from "components/Headers/ThirdBaccarat.js";
 import HomeFooter from "components/Footers/HomeFooter.js";
 
 import Poker from "components/Baccarat/Poker.js";
+import Chip from "components/Baccarat/Chip.js";
 
 import video from "assets/video/720p.mp4";
 // ajax
@@ -31,12 +32,121 @@ function GameBaccarat() {
     }
 
   };
-  
   document.documentElement.classList.remove("nav-open");
 
+  const player_bet_ref = React.createRef();
+  const tie_bet_ref = React.createRef();
+  const banker_bet_ref = React.createRef();
+
   React.useEffect(() => {
+
   });
 
+  // 抓取當前選擇的籌碼
+  function get_current_cash() {
+    var current = 0;
+    
+    var obj = document.querySelector('.chip1');
+    if (obj.className == "chip1 active") current = 5;
+
+    obj = document.querySelector('.chip2');
+    if (obj.className == "chip2 active") current = 10;
+
+    obj = document.querySelector('.chip3');
+    if (obj.className == "chip3 active") current = 50;
+
+    obj = document.querySelector('.chip4');
+    if (obj.className == "chip4 active") current = 100;
+
+    obj = document.querySelector('.chip5');
+    if (obj.className == "chip5 active") current = 500;
+
+    return current;
+  }
+  
+  function player_bet() {
+    var current = parseInt(get_current_cash());
+    if (current == 0) {
+      toast.error("請先選擇籌碼");
+    }
+    var current_bet = parseInt(player_bet_ref.current.value);
+    current_bet = current_bet + current;
+    player_bet_ref.current.value = current_bet;
+
+    // 發送下注請求
+    axios.post('http://localhost:8080/api/baccarat_bet',{
+      // 彩種
+      game_id:1,
+			// 玩法
+      game_type_id:1,
+			// 金額
+      total_amount: current
+    }).
+    then( response => {
+      if (response.data.status == "1") {
+        toast.success("下注成功！餘額：" + response.data.balance);
+        ReactDOM.render(response.data.balance,document.getElementById('user_balance'))
+      } else {
+        toast.error(response.data.message);
+      }
+    })
+  }
+
+  function tie_bet() {
+    var current = parseInt(get_current_cash());
+    if (current == 0) {
+      toast.error("請先選擇籌碼");
+    }
+    var current_bet = parseInt(tie_bet_ref.current.value);
+    current_bet = current_bet + current;
+    tie_bet_ref.current.value = current_bet;
+
+        // 發送下注請求
+        axios.post('http://localhost:8080/api/baccarat_bet',{
+          // 彩種
+          game_id:1,
+          // 玩法
+          game_type_id:2,
+          // 金額
+          total_amount: current
+        }).
+        then( response => {
+          if (response.data.status == "1") {
+            toast.success("下注成功！餘額：" + response.data.balance);
+            ReactDOM.render(response.data.balance,document.getElementById('user_balance'))
+          } else {
+            toast.error(response.data.message);
+          }
+        })
+  }
+
+  function banker_bet() {
+    var current = parseInt(get_current_cash());
+    if (current == 0) {
+      toast.error("請先選擇籌碼");
+    }
+    var current_bet = parseInt(banker_bet_ref.current.value);
+    current_bet = current_bet + current;
+    banker_bet_ref.current.value = current_bet;
+
+        // 發送下注請求
+        axios.post('http://localhost:8080/api/baccarat_bet',{
+          // 彩種
+          game_id:1,
+          // 玩法
+          game_type_id:3,
+          // 金額
+          total_amount: current
+        }).
+        then( response => {
+          if (response.data.status == "1") {
+            toast.success("下注成功！餘額：" + response.data.balance);
+            ReactDOM.render(response.data.balance,document.getElementById('user_balance'))
+          } else {
+            toast.error(response.data.message);
+          }
+        })
+  }
 
   return (
     <>
@@ -58,26 +168,33 @@ function GameBaccarat() {
                       backgroundColor:"rgb(0 0 0 / 50%)",
                       color:"#fff",
                       height:"250px",
-                      display: "flex"
                     }}>
-                      <h2>閒</h2>
-                      <br / >
-                      <Poker color="1" card="1" />
-                      <Poker color="2" card="1" />
+                      <div className="text-center" style={{paddingRight:"50px"}}>
+                        <h2>閒</h2>
+                      </div>
+                      <div style={{
+                        display: "flex",
+                        }}>
+                        <Poker color="1" card="1" />
+                        <Poker color="2" card="1" />
+                      </div>
                     </Col>
                     <Col md={5}></Col>
                     <Col md={3} style={{
                       backgroundColor:"rgb(0 0 0 / 50%)",
                       color:"#fff",
                       height:"250px",
-                      display: "flex",
-                      marginRight:"0px",
                       marginLeft: "82px",
                     }}>
-                      <h2>庄</h2>
-                      <br / >
-                      <Poker color="1" card="1" />
-                      <Poker color="2" card="1" />
+                      <div className="text-center" style={{paddingRight:"50px"}}>
+                        <h2>庄</h2>
+                      </div>
+                      <div style={{
+                        display: "flex",
+                        }}>
+                        <Poker color="1" card="1" />
+                        <Poker color="2" card="1" />
+                      </div>
                     </Col>
             </Row>
             <Row style={{
@@ -93,24 +210,59 @@ function GameBaccarat() {
                  fontSize: "50px",
                  backgroundColor: "transparent",
                  textShadow: "rgb(3, 3, 3) 4px 4px 4px",
-               }}>字幕字幕字幕字幕</h2> 
+               }}>開獎中...</h2> 
             </Row>
             <Row style={{
               marginLeft:"0px",
               marginRight:"10px",
             }}>
-                    <Col style={{
-                      backgroundColor:"rgb(0 0 0 / 50%)",
+                  <Col md={3} style={{
+                    backgroundColor:"rgb(0 0 0 /0%)",
+                    color:"#fff",
+                    height:"200px",
+                  }}>
+                    局號 : 12345678
+                    <br />
+                    00:00
+                  </Col>
+                    <Col md={6} style={{
+                      backgroundColor:"rgb(0 0 0 / 0%)",
+                      color:"#fff",
+                      height:"200px"
+                    }}>
+                      <div style={{display:"flex",marginLeft: "88px"}}>
+                        <div className="baccarat_bet_area" onClick={player_bet}>
+                          <h2>閒</h2>
+                          <span>1 : 1</span>
+                          <input className="player_bet_input" ref={player_bet_ref} type="text" value="0" maxLength="8"/>
+                        </div>
+                        <div className="baccarat_bet_area" onClick={tie_bet}>
+                          <h2>和</h2>
+                          <span>1 : 1</span>
+                          <input className="player_bet_input" ref={tie_bet_ref} type="text" value="0" maxLength="8"/>
+                        </div>
+                        <div className="baccarat_bet_area" onClick={banker_bet}>
+                          <h2>庄</h2>
+                          <span style={{
+                            marginLeft:"20px"
+                          }}>1 : 0.95</span>
+                          <input className="player_bet_input" ref={banker_bet_ref} type="text" value="0" maxLength="8"/>
+                        </div>
+                      </div>
+                      <div style={{display:"flex",marginLeft: "80px"}}>
+                        <Chip color="1" value="5" />
+                        <Chip color="2" value="10" />
+                        <Chip color="3" value="50" />
+                        <Chip color="4" value="100" />
+                        <Chip color="5" value="500" />
+                      </div>
+                    </Col>
+                    <Col md={3} style={{
+                      backgroundColor:"rgb(0 0 0 / 0%)",
                       color:"#fff",
                       height:"200px",
-                      textAlign:"center",
-                      display: "flex"
                     }}>
-                      
-                      <Poker color="1" card="1" />
-                      <Poker color="2" card="1" />
-                      <Poker color="3" card="1" />
-                      <Poker color="4" card="1" />
+                      other
                     </Col>
               </Row>
         </Container>

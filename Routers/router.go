@@ -44,6 +44,7 @@ func Setup() *gin.Engine {
 	userController := Controller.NewUserController()
 	walletController := Controller.NewWalletController()
 	lotteryController := Controller.NewLotteryController()
+	baccaratController := Controller.NewBaccaratController()
 	//router.GET("/", authController.LoginPage)
 
 	// todo , 頁面使用的API
@@ -63,9 +64,11 @@ func Setup() *gin.Engine {
 
 		// 投注接口
 		api.POST("/lottery_bet", lotteryController.CreateLotteryOrder)
-
 		// 取得開獎號碼
 		api.POST("/lottery_result", lotteryController.GetLotteryResult)
+
+		// 投注接口
+		api.POST("/baccarat_bet", baccaratController.CreateBaccaratOrder)
 
 	}
 
