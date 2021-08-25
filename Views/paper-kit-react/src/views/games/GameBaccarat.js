@@ -14,6 +14,7 @@ import HomeNavbar from "components/Navbars/HomeNavbar.js";
 import Header from "components/Headers/ThirdBaccarat.js";
 import HomeFooter from "components/Footers/HomeFooter.js";
 
+import CycleCountdown from "components/Baccarat/CycleCountdown.js";
 import Poker from "components/Baccarat/Poker.js";
 import Chip from "components/Baccarat/Chip.js";
 
@@ -39,7 +40,7 @@ function GameBaccarat() {
   const banker_bet_ref = React.createRef();
 
   React.useEffect(() => {
-
+    ReactDOM.render(<CycleCountdown /> , document.getElementById('counter'));
   });
 
   // 抓取當前選擇的籌碼
@@ -164,36 +165,40 @@ function GameBaccarat() {
               marginLeft:"0px",
               marginRight:"0px",
             }}>
-                    <Col md={3} style={{
-                      backgroundColor:"rgb(0 0 0 / 50%)",
+                    <Col md={4} style={{
                       color:"#fff",
                       height:"250px",
                     }}>
-                      <div className="text-center" style={{paddingRight:"50px"}}>
-                        <h2>閒</h2>
-                      </div>
-                      <div style={{
-                        display: "flex",
-                        }}>
-                        <Poker color="1" card="1" />
-                        <Poker color="2" card="1" />
+                      <div id="player_cards">
+                        <div className="text-center" style={{paddingRight:"50px"}}>
+                          <h2>閒</h2>
+                        </div>
+                        <div id="player_cards_result" style={{
+                          display: "flex",
+                          }}>
+                          <Poker color="1" card="10" />
+                          <Poker color="1" card="10" />
+                          <Poker color="1" card="10" />
+                        </div>
                       </div>
                     </Col>
-                    <Col md={5}></Col>
-                    <Col md={3} style={{
-                      backgroundColor:"rgb(0 0 0 / 50%)",
+                    <Col md={3}></Col>
+                    <Col md={4} style={{
                       color:"#fff",
                       height:"250px",
                       marginLeft: "82px",
                     }}>
-                      <div className="text-center" style={{paddingRight:"50px"}}>
-                        <h2>庄</h2>
-                      </div>
-                      <div style={{
-                        display: "flex",
-                        }}>
-                        <Poker color="1" card="1" />
-                        <Poker color="2" card="1" />
+                      <div id="banker_cards">
+                        <div className="text-center" style={{paddingRight:"50px"}}>
+                          <h2>庄</h2>
+                        </div>
+                        <div id="banker_cards_result" style={{
+                          display: "flex",
+                          }}>
+                          <Poker color="1" card="10" />
+                          <Poker color="1" card="10" />
+                          <Poker color="1" card="10" />
+                        </div>
                       </div>
                     </Col>
             </Row>
@@ -210,7 +215,7 @@ function GameBaccarat() {
                  fontSize: "50px",
                  backgroundColor: "transparent",
                  textShadow: "rgb(3, 3, 3) 4px 4px 4px",
-               }}>開獎中...</h2> 
+               }} id="baccarat_message"></h2> 
             </Row>
             <Row style={{
               marginLeft:"0px",
@@ -221,9 +226,10 @@ function GameBaccarat() {
                     color:"#fff",
                     height:"200px",
                   }}>
-                    局號 : 12345678
-                    <br />
-                    00:00
+                    局號 : <span id="current_cycle"></span>
+                    
+                  <h2 id="counter" className="mt-2"></h2>
+                  
                   </Col>
                     <Col md={6} style={{
                       backgroundColor:"rgb(0 0 0 / 0%)",
@@ -234,23 +240,23 @@ function GameBaccarat() {
                         <div className="baccarat_bet_area" onClick={player_bet}>
                           <h2>閒</h2>
                           <span>1 : 1</span>
-                          <input className="player_bet_input" ref={player_bet_ref} type="text" value="0" maxLength="8"/>
+                          <input id="player_bet_total" className="player_bet_input" ref={player_bet_ref} type="text" value="0" maxLength="8"/>
                         </div>
                         <div className="baccarat_bet_area" onClick={tie_bet}>
                           <h2>和</h2>
-                          <span>1 : 1</span>
-                          <input className="player_bet_input" ref={tie_bet_ref} type="text" value="0" maxLength="8"/>
+                          <span>1 : 8</span>
+                          <input id="tie_bet_total" className="player_bet_input" ref={tie_bet_ref} type="text" value="0" maxLength="8"/>
                         </div>
                         <div className="baccarat_bet_area" onClick={banker_bet}>
                           <h2>庄</h2>
                           <span style={{
                             marginLeft:"20px"
                           }}>1 : 0.95</span>
-                          <input className="player_bet_input" ref={banker_bet_ref} type="text" value="0" maxLength="8"/>
+                          <input id="banker_bet_total" className="player_bet_input" ref={banker_bet_ref} type="text" value="0" maxLength="8"/>
                         </div>
                       </div>
                       <div style={{display:"flex",marginLeft: "80px"}}>
-                        <Chip color="1" value="5" />
+                        <Chip color="1" value="5" defaultActive="1" />
                         <Chip color="2" value="10" />
                         <Chip color="3" value="50" />
                         <Chip color="4" value="100" />

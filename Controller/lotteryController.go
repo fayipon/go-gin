@@ -178,7 +178,7 @@ func (repository *LotteryOrderRepo) CreateLotteryOrder(c *gin.Context) {
 }
 
 // 定時任務 , 開獎腳本
-func (repository *LotteryOrderRepo) LotteryResult() {
+func (repository *LotteryOrderRepo) Result() {
 
 	//////////////////
 	// 計算當前期數

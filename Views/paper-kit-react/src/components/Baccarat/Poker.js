@@ -15,10 +15,22 @@ function Poker(props) {
     const pos_x = -12 - (props.card-1)*98 + "px";
     const pos_y = -5 - (props.color-1)*140 + "px";
 
+    var orderClass = "";
+    if (props.order == 1) {
+        orderClass = "poker card_first";
+    }
+    if (props.order == 2) {
+        orderClass = "poker card_second";
+    }
+    if (props.order == 3) {
+        orderClass = "poker card_third";
+    }
+
     return (
-        <div className="poker" style={{
+        <div style={{
             width:"100px",
             height:"140px",
+            marginLeft:"10px",
             backgroundImage: "url(" + require("assets/img/poker/poker.jpg").default + ")",
             backgroundPosition: pos_x + " " + pos_y
         }} > </div>

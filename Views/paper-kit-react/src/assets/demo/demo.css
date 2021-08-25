@@ -772,3 +772,18 @@
     margin-top: 8px;
     color: #fff;
 }
+
+.card_first {
+  transition: opacity 0.5s;
+  opacity: 1;
+}
+
+.card_second {
+  transition: opacity 0.5s;
+  opacity: 1;
+}
+
+.card_third {  
+  transition: opacity 0.5s;
+  opacity: 1;
+}

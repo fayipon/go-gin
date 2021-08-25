@@ -22,10 +22,43 @@ type BaccaratOrderRepo struct {
 	Db *gorm.DB
 }
 
+type MyBaccaratOrder struct {
+	ID              int32
+	GameId          int8
+	GameTypeId      int8
+	GameCycle       string
+	GameCycleResult string
+	UserId          int32
+	UserAccount     string
+	TotalAmount     float32
+	ResultAmount    float32
+	Status          int8
+}
+
 func NewBaccaratController() *BaccaratOrderRepo {
 	db := database.InitDb()
 	db.AutoMigrate(&models.BaccaratOrder{})
 	return &BaccaratOrderRepo{Db: db}
+}
+
+// 取得開獎資料
+func (repository *BaccaratOrderRepo) GetBaccaratResult(c *gin.Context) {
+
+	//////////////////
+	// 計算上期期數 （一分前, 月日時分）
+	tm := time.Now().Add(-time.Minute * 1)
+	// 月日時分
+	cycle_value := tm.Format("01021504")
+
+	var lottery_cycle models.BaccaratCycle
+	repository.Db.Raw("SELECT cycle_value,cycle_result FROM baccarat_cycle where cycle_value = ?", cycle_value).Scan(&lottery_cycle)
+
+	c.JSON(http.StatusOK, gin.H{
+		"status":  "1",
+		"message": "",
+		"cycle":   lottery_cycle.CycleValue,
+		"result":  lottery_cycle.CycleResult,
+	})
 }
 
 // 下注接口
@@ -111,7 +144,7 @@ func (repository *BaccaratOrderRepo) CreateBaccaratOrder(c *gin.Context) {
 	s_user_id := fmt.Sprint(user_id)
 	change_log += s_user_id + "', '"
 	s_account := fmt.Sprint(account)
-	change_log += s_account + "', 'LOTTERY_BET', '"
+	change_log += s_account + "', 'BACCARAT_BET', '"
 	s_result_balance := fmt.Sprint(change_balance)
 	change_log += s_result_balance + "', '"
 	s_current_balance := fmt.Sprint(before_balance)
@@ -130,8 +163,21 @@ func (repository *BaccaratOrderRepo) CreateBaccaratOrder(c *gin.Context) {
 }
 
 // 定時任務 , 開獎腳本
-func (repository *BaccaratOrderRepo) BaccaratResult() {
+func (repository *BaccaratOrderRepo) Result() {
 
+	// card points
+	var card_points = [...]int{
+		1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 0, 0, 0,
+		1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 0, 0, 0,
+		1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 0, 0, 0,
+		1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 0, 0, 0}
+	/*
+		var card_value = [...]string{
+			"黑桃A", "黑桃2", "黑桃3", "黑桃4", "黑桃5", "黑桃6", "黑桃7", "黑桃8", "黑桃9", "黑桃10", "黑桃J", "黑桃Q", "黑桃K",
+			"方塊A", "方塊2", "方塊3", "方塊4", "方塊5", "方塊6", "方塊7", "方塊8", "方塊9", "方塊10", "方塊J", "方塊Q", "方塊K",
+			"梅花A", "梅花2", "梅花3", "梅花4", "梅花5", "梅花6", "梅花7", "梅花8", "梅花9", "梅花10", "梅花J", "梅花Q", "梅花K",
+			"紅心A", "紅心2", "紅心3", "紅心4", "紅心5", "紅心6", "紅心7", "紅心8", "紅心9", "紅心10", "紅心J", "紅心Q", "紅心K"}
+	*/
 	//////////////////
 	// 計算當前期數
 	tm := time.Now().Add(-time.Minute * 1)
@@ -140,123 +186,229 @@ func (repository *BaccaratOrderRepo) BaccaratResult() {
 
 	// 生成隨機號碼
 	var tmp string
-	for i := 0; i < 5; i++ {
-		result, _ := rand.Int(rand.Reader, big.NewInt(10))
-		tmp += result.String()
-	}
-	log.Println(cycle_value, "期 => ", tmp)
+	var bank_tmp string
 
-	cycle_result := strings.Split(tmp, "")
+	for i := 0; i < 3; i++ {
+		result, _ := rand.Int(rand.Reader, big.NewInt(52))
+		tmp += result.String() + ","
+	}
+
+	player_result := strings.Split(tmp, ",")
+	player_value1, _ := strconv.Atoi(player_result[0])
+	player_value2, _ := strconv.Atoi(player_result[1])
+	player_value3, _ := strconv.Atoi(player_result[2])
+	player_point := (card_points[player_value1] + card_points[player_value2]) % 10
+
+	//	log.Println(cycle_value, " 閒家手牌1 ", card_value[player_value1], " => ", card_points[player_value1])
+	//	log.Println(cycle_value, " 閒家手牌2 ", card_value[player_value2], " => ", card_points[player_value2])
+	//	log.Println("閒家點數 ", player_point)
+
+	///////////////////
+
+	for i := 0; i < 3; i++ {
+		result, _ := rand.Int(rand.Reader, big.NewInt(52))
+		bank_tmp += result.String() + ","
+	}
+
+	banker_result := strings.Split(bank_tmp, ",")
+	banker_value1, _ := strconv.Atoi(banker_result[0])
+	banker_value2, _ := strconv.Atoi(banker_result[1])
+	banker_value3, _ := strconv.Atoi(banker_result[2])
+	banker_point := (card_points[banker_value1] + card_points[banker_value2]) % 10
+
+	//	log.Println(cycle_value, " 庄家手牌1 ", card_value[banker_value1], " => ", card_points[banker_value1])
+	//	log.Println(cycle_value, " 庄家手牌2 ", card_value[banker_value2], " => ", card_points[banker_value2])
+	////	log.Println("庄家點數 ", banker_point)
+
+	////////////////////////
+
+	//	log.Println(" ")
+
+	// 計算補牌
+	player_3rd := 0
+	banker_3rd := 0
+
+	// Player
+	if player_point >= 8 {
+		//		log.Println("閒家天牌,不補牌")
+		player_3rd = 2
+	}
+
+	if (player_point > 5) && (player_point < 8) {
+		//		log.Println("閒家6-7點,不補牌")
+		player_3rd = 2
+	}
+
+	if (player_point >= 0) && (player_point <= 5) && (banker_point > 8) {
+		//		log.Println(" 庄贏, 不補牌")
+		player_3rd = 2
+	}
+
+	// 在閑家總點數為0至5任意點數時，只要莊家總點數不為8或9點，則閑家補一張。 如果莊家在此時點數為8或9點，則莊家贏，閑家不補牌。
+	if (player_point >= 0) && (player_point <= 5) && (banker_point < 8) {
+		//		log.Println("閒家補牌")
+		player_3rd = 1
+
+	}
+
+	// 閒家補牌
+	if player_3rd == 1 {
+		player_point = (player_point + card_points[player_value3]) % 10
+		//		log.Println(cycle_value, " 閒家手牌3 ", player_value3, " => ", card_value[player_value3])
+		//		log.Println("閒家補牌後點數 ", player_point)
+	}
+	////////////////////////
+
+	//	log.Println(" ")
+
+	/*
+		// banker
+
+	*/
+
+	if banker_point < 3 {
+		//		log.Println("庄點數0,1,2 , 庄家補牌")
+		banker_3rd = 1
+	}
+
+	if banker_point == 8 {
+		//		log.Println("庄家天牌,不補牌")
+		banker_3rd = 2
+	}
+	if banker_point == 9 {
+		//		log.Println("庄家天牌,不補牌")
+		banker_3rd = 2
+	}
+
+	if banker_point == 7 {
+		//		log.Println("庄家7,不補牌")
+		banker_3rd = 2
+	}
+
+	// 如果閒有補牌
+	if (banker_3rd == 0) && player_3rd == 1 {
+
+		switch banker_point {
+		case 3: // 如果閒家補得第三張牌（非三張牌點數相加，下同）是8點，不須補牌，其他則需補牌
+			if player_value3 != 8 {
+				banker_3rd = 1
+			} else {
+				banker_3rd = 2
+				//				log.Println("庄3點 , 閒第三張手牌8 , 庄家不補牌")
+			}
+		case 4: // 如果閒家補得第三張牌是0,1,8,9點，不須補牌，其他則需補牌
+			if (player_value3 != 0) && (player_value3 != 1) && (player_value3 != 8) && (player_value3 != 9) {
+				banker_3rd = 1
+			} else {
+				//				log.Println("庄4點 , 閒第三張手牌0,1,8,9, 庄家不補牌")
+				banker_3rd = 2
+			}
+		case 5: // 如果閒家補得第三張牌是0,1,2,3,8,9點，不須補牌，其他則需補牌
+			if (player_value3 != 0) && (player_value3 != 1) && (player_value3 != 2) && (player_value3 != 3) && (player_value3 != 8) && (player_value3 != 9) {
+				banker_3rd = 1
+			} else {
+				//				log.Println("庄5點 , 閒第三張手牌0,1,2,3,8,9, 庄家不補牌")
+				banker_3rd = 2
+			}
+		case 6:
+			// 如果閒家需補牌（即前提是閒家為1至5點）而補得第三張牌是6或7點，補一張牌，其他則不需補牌
+			if (player_point > 0) && (player_point <= 5) && ((player_value3 == 6) || (player_value3 == 7)) {
+				//				log.Println("庄6點 , 閒第三張67, 庄家補牌")
+				banker_3rd = 1
+			} else {
+				//				log.Println("庄6點 , 閒第三張手牌不是6,7, 庄家不補牌")
+				banker_3rd = 2
+			}
+		}
+
+	}
+
+	// 裝家補牌
+	if banker_3rd == 1 {
+		//		log.Println(" ")
+		//		log.Println("庄家補牌")
+
+		banker_point = (banker_point + card_points[banker_value3]) % 10
+		//		log.Println(cycle_value, " 庄家手牌3 ", banker_value3, " => ", card_value[banker_value3])
+		//		log.Println("庄家補牌後點數 ", banker_point)
+	}
+
+	log.Println("開獎結果", cycle_value)
+
+	player_card3 := player_value3
+	if player_3rd != 1 {
+		player_card3 = -1
+	}
+
+	banker_card3 := banker_value3
+	if banker_3rd != 1 {
+		banker_card3 = -1
+	}
+
+	/*	var baccarat_result = []int{
+		player_value1, player_value2, player_value3, player_point,
+		banker_value1, banker_value2, banker_value3, banker_point}
+	*/
+
+	baccarat_result_string := strconv.Itoa(player_value1) + "," + strconv.Itoa(player_value2) + "," + strconv.Itoa(player_value3) + "," + strconv.Itoa(player_card3) + "," + strconv.Itoa(banker_value1) + "," + strconv.Itoa(banker_value2) + "," + strconv.Itoa(banker_value3) + "," + strconv.Itoa(banker_card3)
+
+	game_result := 0
+
+	if strconv.Itoa(player_point) > strconv.Itoa(banker_point) {
+		baccarat_result_string += ",1"
+		game_result = 1
+	}
+	if strconv.Itoa(player_point) < strconv.Itoa(banker_point) {
+		baccarat_result_string += ",2"
+		game_result = 3
+	}
+	if strconv.Itoa(player_point) == strconv.Itoa(banker_point) {
+		baccarat_result_string += ",3"
+		game_result = 2
+	}
+
+	log.Print(baccarat_result_string, game_result)
 
 	// 寫入開獎號碼 （這邊是直接更新注單）
-	var updateCycle models.LotteryOrder
-	var sql = "UPDATE `lottery_order` SET `game_cycle_result` = '"
-	sql += tmp
+	var updateCycle models.BaccaratOrder
+	var sql = "UPDATE `baccarat_order` SET `game_cycle_result` = '"
+	sql += baccarat_result_string
 	sql += "' WHERE `game_cycle`=?"
 	repository.Db.Raw(sql, cycle_value).Scan(&updateCycle)
 
 	// 插入新的獎期資料
-	var newCycle = "INSERT INTO `lottery_cycle` (`cycle_value`, `cycle_result`) VALUES ('"
+	var newCycle = "INSERT INTO `baccarat_cycle` (`cycle_value`, `cycle_result`) VALUES ('"
 	newCycle += cycle_value
 	newCycle += "', '"
-	newCycle += tmp
+	newCycle += baccarat_result_string
 	newCycle += "');"
 	repository.Db.Exec(newCycle)
 
 	// 抓取該期注單紀錄
-	rows, _ := repository.Db.Table("lottery_order").Where("game_cycle=?", cycle_value).Rows()
+	rows, _ := repository.Db.Table("baccarat_order").Where("game_cycle=?", cycle_value).Rows()
 	defer rows.Close()
 
-	var myOrder MyLotteryOrder
+	log.Println("========TODO LINE ============")
+
+	var myOrder MyBaccaratOrder
 	for rows.Next() {
 		repository.Db.ScanRows(rows, &myOrder)
 
-		// 根據game_type_id , 計算中幾注 中多少錢
-
-		var result_count = 0
-		result_balance := float32(result_count) * myOrder.SingleAmount * 1
-
-		bet_info := strings.Split(myOrder.GameBetInfo, ",")
+		result_balance := myOrder.TotalAmount - myOrder.TotalAmount
 
 		switch myOrder.GameTypeId {
-		case 1: // 定位膽
-
-			// 計算中獎注數
-
-			for i := 0; i < len(cycle_result); i++ {
-				//	log.Print("cycle_result => ", cycle_result[i])
-				result_number, _ := strconv.Atoi(cycle_result[i])
-				pos := i*10 + result_number
-				if bet_info[pos] == "1" {
-					result_count++
-				}
+		case 1: // 閒
+			if game_result == 1 {
+				result_balance = myOrder.TotalAmount * 2
 			}
-
-			// 計算中獎金額
-			result_balance = float32(result_count) * myOrder.SingleAmount * 10
-
-		case 2: // 大小單雙
-
-			// 計算中獎注數
-			for i := 0; i < len(cycle_result); i++ {
-				result_number, _ := strconv.Atoi(cycle_result[i])
-				if result_number >= 5 {
-					// 大
-					if bet_info[i*4] == "1" {
-						result_count++
-					}
-				} else {
-					// 小
-					if bet_info[i*4+1] == "1" {
-						result_count++
-					}
-				}
-
-				if result_number%2 == 1 {
-					// 單
-					if bet_info[i*4+2] == "1" {
-						result_count++
-					}
-				} else {
-					// 雙
-					if bet_info[i*4+3] == "1" {
-						result_count++
-					}
-				}
+		case 2: //和
+			if game_result == 2 {
+				result_balance = myOrder.TotalAmount * 9
 			}
-
-			// 計算中獎金額
-			result_balance = float32(result_count) * myOrder.SingleAmount * 2
-
-		case 3:
-			d := cycle_result[0]
-			t := cycle_result[4]
-
-			if d > t {
-				// 龍
-				if bet_info[0] == "1" {
-					result_count++
-
-					result_balance += myOrder.SingleAmount * 2.2
-				}
+		case 3: // 庄
+			if game_result == 3 {
+				result_balance = myOrder.TotalAmount * 1.95
 			}
-
-			if d < t {
-				// 虎
-				if bet_info[1] == "1" {
-					result_count++
-					result_balance += myOrder.SingleAmount * 2.2
-				}
-			}
-
-			if d == t {
-				// 和
-				if bet_info[2] == "1" {
-					result_count++
-					result_balance += myOrder.SingleAmount * 10
-				}
-			}
-
 		default:
 			log.Println("default trigged")
 		}
@@ -264,13 +416,10 @@ func (repository *BaccaratOrderRepo) BaccaratResult() {
 		log.Println("開獎號碼=> ", myOrder.GameCycleResult)
 		log.Println("中獎ID => ", myOrder.ID)
 		log.Println("玩法 => ", myOrder.GameTypeId)
-		log.Println("中獎注數 => ", result_count)
 		log.Println("中獎金額 => ", result_balance)
 
 		// 更新注單
-		var sql = "UPDATE `lottery_order` SET `game_result_count` = '"
-		sql += strconv.Itoa(result_count)
-		sql += "', `result_amount` = '"
+		var sql = "UPDATE `baccarat_order` SET `result_amount` = '"
 		s := fmt.Sprintf("%f", result_balance)
 		sql += s
 		sql += "', `status` = 2"
@@ -302,7 +451,7 @@ func (repository *BaccaratOrderRepo) BaccaratResult() {
 			var change_log = "INSERT INTO `common_user_balance_log` (`user_id`, `account`, `change_type`, `change_amount`, `before_amount`, `after_amount`) VALUES ('"
 			s_user_id := fmt.Sprint(myOrder.UserId)
 			change_log += s_user_id + "', '"
-			change_log += myOrder.UserAccount + "', 'LOTTERY_RESULT', '"
+			change_log += myOrder.UserAccount + "', 'BACCARAT_RESULT', '"
 			s_result_balance := fmt.Sprint(result_balance)
 			change_log += s_result_balance + "', '"
 			s_current_balance := fmt.Sprint(current_balance)
@@ -314,5 +463,4 @@ func (repository *BaccaratOrderRepo) BaccaratResult() {
 		}
 
 	}
-
 }

@@ -69,6 +69,7 @@ func Setup() *gin.Engine {
 
 		// 投注接口
 		api.POST("/baccarat_bet", baccaratController.CreateBaccaratOrder)
+		api.POST("/baccarat_result", baccaratController.GetBaccaratResult)
 
 	}
 
