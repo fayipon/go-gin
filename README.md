@@ -24,7 +24,9 @@ TG @fayitw
 ![image](https://github.com/fayipon/go-gin/blob/main/Demo/003.jpg?raw=true)
 ![image](https://github.com/fayipon/go-gin/blob/main/Demo/004.jpg?raw=true)
 
-真人   
+真人  (2021/08/25 完善)
+![image](https://github.com/fayipon/go-gin/blob/main/Demo/005.jpg?raw=true)
+![image](https://github.com/fayipon/go-gin/blob/main/Demo/006.jpg?raw=true)
 
 體育  
 
@@ -77,4 +79,8 @@ TG @fayitw
 8/24
 1. 真人投注接口實裝
 增加了BaccaratOrderModel , BaccaratController
+
+8/25
+1. 真人開獎接口/腳本實裝
+2. 真人開獎前端流程實裝
 
