@@ -42,6 +42,7 @@ import RegisterPage from "views/pages/Register.js";
 // game
 import GameLottery from "views/games/GameLottery.js";
 import GameBaccarat from "views/games/GameBaccarat.js";
+import GameSport from "views/games/GameSport";
 import GameChess from "views/games/GameChess.js";
 
 // others
@@ -64,6 +65,7 @@ ReactDOM.render(
         
         <Route path="/game/lottery" render={(props) => <GameLottery {...props} />} />
         <Route path="/game/baccarat" render={(props) => <GameBaccarat {...props} />} />
+        <Route path="/game/sport" render={(props) => <GameSport {...props} />} />
         <Route path="/game/chess" render={(props) => <GameChess {...props} />} />
 
         <Route path="/register" render={(props) => <RegisterPage {...props} />} />

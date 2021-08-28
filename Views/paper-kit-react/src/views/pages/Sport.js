@@ -30,6 +30,11 @@ import {
 import HomeNavbar from "components/Navbars/HomeNavbar.js";
 import SecondSport from "components/Headers/SecondSport.js";
 import HomeFooter from "components/Footers/HomeFooter.js";
+import history from './../../history';
+
+function EnterGame() {
+  history.push('/game/sport');
+}
 
 function SportPage() {
 
@@ -68,7 +73,7 @@ function SportPage() {
                 文案描述文案描述文案描述文案描述文案描述文案描述文案描述文案描述文案描述文案描述
               </p>
               <br />
-              <Button className="btn-round" color="danger" outline>
+              <Button className="btn-round" color="danger" outline onClick={EnterGame}>
                 <i className="fa fa-cog" /> 開始遊戲
               </Button>
             </Col>

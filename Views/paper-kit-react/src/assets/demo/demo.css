@@ -650,6 +650,10 @@
   background: linear-gradient(#060100,#c5a448,#fff);
 }
 
+.sport_bg {
+  background: linear-gradient(#012714,#597768,#fff);
+}
+
 
 .betarea {
   display: flex;
@@ -791,4 +795,8 @@
 .card_third {  
   transition: opacity 0.5s;
   opacity: 1;
+}
+
+.col {
+  line-height: 60px;
 }
