@@ -42,7 +42,7 @@ func NewBaccaratController() *BaccaratOrderRepo {
 }
 
 // 取得開獎資料
-func (repository *BaccaratOrderRepo) GetBaccaratResult(c *gin.Context) {
+func (repository *BaccaratOrderRepo) GetResult(c *gin.Context) {
 
 	//////////////////
 	// 計算上期期數 （一分前, 月日時分）
@@ -62,7 +62,7 @@ func (repository *BaccaratOrderRepo) GetBaccaratResult(c *gin.Context) {
 }
 
 // 下注接口
-func (repository *BaccaratOrderRepo) CreateBaccaratOrder(c *gin.Context) {
+func (repository *BaccaratOrderRepo) CreateOrder(c *gin.Context) {
 
 	var baccarat_order models.BaccaratOrder
 	if c.ShouldBind(&baccarat_order) != nil {
@@ -171,14 +171,7 @@ func (repository *BaccaratOrderRepo) Result() {
 		1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 0, 0, 0,
 		1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 0, 0, 0,
 		1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 0, 0, 0}
-	/*
-		var card_value = [...]string{
-			"黑桃A", "黑桃2", "黑桃3", "黑桃4", "黑桃5", "黑桃6", "黑桃7", "黑桃8", "黑桃9", "黑桃10", "黑桃J", "黑桃Q", "黑桃K",
-			"方塊A", "方塊2", "方塊3", "方塊4", "方塊5", "方塊6", "方塊7", "方塊8", "方塊9", "方塊10", "方塊J", "方塊Q", "方塊K",
-			"梅花A", "梅花2", "梅花3", "梅花4", "梅花5", "梅花6", "梅花7", "梅花8", "梅花9", "梅花10", "梅花J", "梅花Q", "梅花K",
-			"紅心A", "紅心2", "紅心3", "紅心4", "紅心5", "紅心6", "紅心7", "紅心8", "紅心9", "紅心10", "紅心J", "紅心Q", "紅心K"}
-	*/
-	//////////////////
+
 	// 計算當前期數
 	tm := time.Now().Add(-time.Minute * 1)
 	// 月日時分
@@ -199,10 +192,6 @@ func (repository *BaccaratOrderRepo) Result() {
 	player_value3, _ := strconv.Atoi(player_result[2])
 	player_point := (card_points[player_value1] + card_points[player_value2]) % 10
 
-	//	log.Println(cycle_value, " 閒家手牌1 ", card_value[player_value1], " => ", card_points[player_value1])
-	//	log.Println(cycle_value, " 閒家手牌2 ", card_value[player_value2], " => ", card_points[player_value2])
-	//	log.Println("閒家點數 ", player_point)
-
 	///////////////////
 
 	for i := 0; i < 3; i++ {
@@ -215,14 +204,6 @@ func (repository *BaccaratOrderRepo) Result() {
 	banker_value2, _ := strconv.Atoi(banker_result[1])
 	banker_value3, _ := strconv.Atoi(banker_result[2])
 	banker_point := (card_points[banker_value1] + card_points[banker_value2]) % 10
-
-	//	log.Println(cycle_value, " 庄家手牌1 ", card_value[banker_value1], " => ", card_points[banker_value1])
-	//	log.Println(cycle_value, " 庄家手牌2 ", card_value[banker_value2], " => ", card_points[banker_value2])
-	////	log.Println("庄家點數 ", banker_point)
-
-	////////////////////////
-
-	//	log.Println(" ")
 
 	// 計算補牌
 	player_3rd := 0
@@ -325,15 +306,8 @@ func (repository *BaccaratOrderRepo) Result() {
 
 	// 裝家補牌
 	if banker_3rd == 1 {
-		//		log.Println(" ")
-		//		log.Println("庄家補牌")
-
 		banker_point = (banker_point + card_points[banker_value3]) % 10
-		//		log.Println(cycle_value, " 庄家手牌3 ", banker_value3, " => ", card_value[banker_value3])
-		//		log.Println("庄家補牌後點數 ", banker_point)
 	}
-
-	log.Println("開獎結果", cycle_value)
 
 	player_card3 := player_value3
 	if player_3rd != 1 {
@@ -344,11 +318,6 @@ func (repository *BaccaratOrderRepo) Result() {
 	if banker_3rd != 1 {
 		banker_card3 = -1
 	}
-
-	/*	var baccarat_result = []int{
-		player_value1, player_value2, player_value3, player_point,
-		banker_value1, banker_value2, banker_value3, banker_point}
-	*/
 
 	baccarat_result_string := strconv.Itoa(player_value1) + "," + strconv.Itoa(player_value2) + "," + strconv.Itoa(player_value3) + "," + strconv.Itoa(player_card3) + "," + strconv.Itoa(banker_value1) + "," + strconv.Itoa(banker_value2) + "," + strconv.Itoa(banker_value3) + "," + strconv.Itoa(banker_card3)
 
@@ -366,8 +335,6 @@ func (repository *BaccaratOrderRepo) Result() {
 		baccarat_result_string += ",3"
 		game_result = 2
 	}
-
-	log.Print(baccarat_result_string, game_result)
 
 	// 寫入開獎號碼 （這邊是直接更新注單）
 	var updateCycle models.BaccaratOrder
@@ -388,7 +355,7 @@ func (repository *BaccaratOrderRepo) Result() {
 	rows, _ := repository.Db.Table("baccarat_order").Where("game_cycle=?", cycle_value).Rows()
 	defer rows.Close()
 
-	log.Println("========TODO LINE ============")
+	log.Println("[真人]", cycle_value, "期 => ", baccarat_result_string)
 
 	var myOrder MyBaccaratOrder
 	for rows.Next() {
@@ -413,11 +380,6 @@ func (repository *BaccaratOrderRepo) Result() {
 			log.Println("default trigged")
 		}
 
-		log.Println("開獎號碼=> ", myOrder.GameCycleResult)
-		log.Println("中獎ID => ", myOrder.ID)
-		log.Println("玩法 => ", myOrder.GameTypeId)
-		log.Println("中獎金額 => ", result_balance)
-
 		// 更新注單
 		var sql = "UPDATE `baccarat_order` SET `result_amount` = '"
 		s := fmt.Sprintf("%f", result_balance)
@@ -427,7 +389,6 @@ func (repository *BaccaratOrderRepo) Result() {
 		ss := fmt.Sprint(myOrder.ID)
 		sql += ss
 		repository.Db.Exec(sql)
-		log.Println("sql => ", sql)
 
 		// 先取得錢包當前額度
 		var wallet models.Wallet
@@ -443,7 +404,6 @@ func (repository *BaccaratOrderRepo) Result() {
 		ssss := fmt.Sprint(myOrder.UserId)
 		sqls += ssss
 		repository.Db.Exec(sqls)
-		log.Println("sql => ", sqls)
 
 		// 帳變寫入 , 有中獎才需要寫
 		if result_balance > 0 {
@@ -459,7 +419,6 @@ func (repository *BaccaratOrderRepo) Result() {
 			s_after_balance := fmt.Sprint(after_balance)
 			change_log += s_after_balance + "');"
 			repository.Db.Exec(change_log)
-			log.Println("sql => ", change_log)
 		}
 
 	}

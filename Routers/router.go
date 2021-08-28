@@ -48,6 +48,7 @@ func Setup() *gin.Engine {
 	walletController := Controller.NewWalletController()
 	lotteryController := Controller.NewLotteryController()
 	baccaratController := Controller.NewBaccaratController()
+	sportController := Controller.NewSportController()
 	//router.GET("/", authController.LoginPage)
 
 	// Socket 服務
@@ -75,13 +76,16 @@ func Setup() *gin.Engine {
 		api.GET("/get_user_balance", walletController.GetUserBalance)
 
 		// 投注接口
-		api.POST("/lottery_bet", lotteryController.CreateLotteryOrder)
+		api.POST("/lottery_bet", lotteryController.CreateOrder)
 		// 取得開獎號碼
-		api.POST("/lottery_result", lotteryController.GetLotteryResult)
+		api.POST("/lottery_result", lotteryController.GetResult)
 
 		// 投注接口
-		api.POST("/baccarat_bet", baccaratController.CreateBaccaratOrder)
-		api.POST("/baccarat_result", baccaratController.GetBaccaratResult)
+		api.POST("/baccarat_bet", baccaratController.CreateOrder)
+		api.POST("/baccarat_result", baccaratController.GetResult)
+
+		// 體育
+		api.POST("/sport_bet", sportController.CreateOrder)
 
 	}
 

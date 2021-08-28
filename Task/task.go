@@ -24,7 +24,12 @@ func Start() {
 
 	// 真人開獎
 	baccaratController := Controller.NewBaccaratController()
-	c.AddFunc("15 * * * * *", baccaratController.Result)
+	c.AddFunc("44 * * * * *", baccaratController.Result)
+
+	// 體育
+	sportController := Controller.NewSportController()
+	c.AddFunc("00 * * * * *", sportController.Result)
+	c.AddFunc("00 * * * * *", sportController.CreateCycle)
 
 	c.Start()
 	select {}

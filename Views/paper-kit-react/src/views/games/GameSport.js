@@ -49,6 +49,7 @@ function GameSport() {
             }}>
               <Row>
                 <Col className="text-center">聯賽名稱 A隊(主) VS B隊(客)</Col>
+                <Col className="text-center">00:00:00</Col>
               </Row>
               <Row className="mb-2 sport-game-list">
                 <Col>
@@ -94,6 +95,7 @@ function GameSport() {
             }}>
               <Row>
                 <Col className="text-center">聯賽名稱 A隊(主) VS B隊(客)</Col>
+                <Col className="text-center">00:00:00</Col>
               </Row>
               <Row className="mb-2 sport-game-list">
                 <Col>
@@ -142,6 +144,7 @@ function GameSport() {
             }}>
               <Row>
                 <Col className="text-center">聯賽名稱 A隊(主) VS B隊(客)</Col>
+                <Col className="text-center">00:00:00</Col>
               </Row>
               <Row className="mb-2 sport-game-list">
                 <Col>

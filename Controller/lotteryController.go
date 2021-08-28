@@ -52,7 +52,7 @@ func NewLotteryController() *LotteryOrderRepo {
 }
 
 // 取得開獎資料
-func (repository *LotteryOrderRepo) GetLotteryResult(c *gin.Context) {
+func (repository *LotteryOrderRepo) GetResult(c *gin.Context) {
 
 	//////////////////
 	// 計算上期期數 （一分前, 月日時分）
@@ -71,7 +71,7 @@ func (repository *LotteryOrderRepo) GetLotteryResult(c *gin.Context) {
 }
 
 // 彩票下注接口
-func (repository *LotteryOrderRepo) CreateLotteryOrder(c *gin.Context) {
+func (repository *LotteryOrderRepo) CreateOrder(c *gin.Context) {
 
 	var lottery_order models.LotteryOrder
 	if c.ShouldBind(&lottery_order) != nil {
@@ -192,7 +192,7 @@ func (repository *LotteryOrderRepo) Result() {
 		result, _ := rand.Int(rand.Reader, big.NewInt(10))
 		tmp += result.String()
 	}
-	log.Println(cycle_value, "期 => ", tmp)
+	log.Println("[彩票]", cycle_value, "期 => ", tmp)
 
 	cycle_result := strings.Split(tmp, "")
 
@@ -309,12 +309,6 @@ func (repository *LotteryOrderRepo) Result() {
 			log.Println("default trigged")
 		}
 
-		log.Println("開獎號碼=> ", myOrder.GameCycleResult)
-		log.Println("中獎ID => ", myOrder.ID)
-		log.Println("玩法 => ", myOrder.GameTypeId)
-		log.Println("中獎注數 => ", result_count)
-		log.Println("中獎金額 => ", result_balance)
-
 		// 更新注單
 		var sql = "UPDATE `lottery_order` SET `game_result_count` = '"
 		sql += strconv.Itoa(result_count)
@@ -326,7 +320,6 @@ func (repository *LotteryOrderRepo) Result() {
 		ss := fmt.Sprint(myOrder.ID)
 		sql += ss
 		repository.Db.Exec(sql)
-		log.Println("sql => ", sql)
 
 		// 先取得錢包當前額度
 		var wallet models.Wallet
@@ -342,7 +335,6 @@ func (repository *LotteryOrderRepo) Result() {
 		ssss := fmt.Sprint(myOrder.UserId)
 		sqls += ssss
 		repository.Db.Exec(sqls)
-		log.Println("sql => ", sqls)
 
 		// 帳變寫入 , 有中獎才需要寫
 		if result_balance > 0 {
@@ -358,7 +350,6 @@ func (repository *LotteryOrderRepo) Result() {
 			s_after_balance := fmt.Sprint(after_balance)
 			change_log += s_after_balance + "');"
 			repository.Db.Exec(change_log)
-			log.Println("sql => ", change_log)
 		}
 
 	}
