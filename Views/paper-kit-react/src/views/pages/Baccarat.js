@@ -28,7 +28,7 @@ import {
 
 // core components
 import HomeNavbar from "components/Navbars/HomeNavbar.js";
-import SecondHeader from "components/Headers/SecondSlot";
+import SecondHeader from "components/Headers/SecondBaccarat";
 import HomeFooter from "components/Footers/HomeFooter.js";
 
 import history from './../../history';
@@ -57,7 +57,7 @@ function BaccaratPage() {
               <img
                 alt="..."
                 className="img-circle img-no-padding img-responsive"
-                src={require("assets/img/faces/slot.jpg").default}
+                src={require("assets/img/faces/baccarat.jpg").default}
               />
             </div>
             <div className="name">

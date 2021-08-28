@@ -31,6 +31,12 @@ import HomeNavbar from "components/Navbars/HomeNavbar.js";
 import SecondHeader from "components/Headers/SecondChess.js";
 import HomeFooter from "components/Footers/HomeFooter.js";
 
+import history from './../../history';
+
+function EnterGame() {
+  history.push('/game/chess');
+}
+
 function ChessPage() {
 
   document.documentElement.classList.remove("nav-open");
@@ -68,7 +74,7 @@ function ChessPage() {
                 文案描述文案描述文案描述文案描述文案描述文案描述文案描述文案描述文案描述文案描述
               </p>
               <br />
-              <Button className="btn-round" color="danger" outline>
+              <Button className="btn-round" color="danger" outline onClick={EnterGame}>
                 <i className="fa fa-cog" /> 開始遊戲
               </Button>
             </Col>

@@ -646,6 +646,11 @@
   background: linear-gradient(#070929,#202843,#ffffff);
 }
 
+.baccarat_bg {
+  background: linear-gradient(#060100,#c5a448,#fff);
+}
+
+
 .betarea {
   display: flex;
   padding-left: 0;    

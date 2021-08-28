@@ -22,13 +22,13 @@ import React from "react";
 
 // core components
 
-function ThirdHeader() {
+function SecondBaccarat() {
   let pageHeader = React.createRef();
 
   React.useEffect(() => {
     if (window.innerWidth < 991) {
       const updateScroll = () => {
-        let windowScrollTop = window.pageYOffset / 5;
+        let windowScrollTop = window.pageYOffset / 3;
         pageHeader.current.style.transform =
           "translate3d(0," + windowScrollTop + "px,0)";
       };
@@ -44,10 +44,9 @@ function ThirdHeader() {
       <div
         style={{
           backgroundImage: "url(" + require("assets/img/second-baccarat.jpg").default + ")",
-          backgroundPosition: "0px 600px",
-          minHeight: "15vh",
+          backgroundPosition: "0px 650px",
         }}
-        className="page-header"
+        className="page-header page-header-xs"
         data-parallax={true}
         ref={pageHeader}
       >
@@ -57,4 +56,4 @@ function ThirdHeader() {
   );
 }
 
-export default ThirdHeader;
+export default SecondBaccarat;

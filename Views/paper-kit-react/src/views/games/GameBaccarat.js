@@ -153,7 +153,7 @@ function GameBaccarat() {
     <>
       <HomeNavbar />
       <Header />
-      <div className="lottery_bg">
+      <div className="baccarat_bg">
         <Container style={{
           minHeight: "650px"
         }}>

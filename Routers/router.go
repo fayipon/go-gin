@@ -7,6 +7,8 @@ import (
 	"github.com/gin-gonic/contrib/static"
 	"github.com/gin-gonic/gin"
 
+	socket "github.com/fayipon/go-gin/Socket"
+
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
 )
@@ -46,6 +48,11 @@ func Setup() *gin.Engine {
 	lotteryController := Controller.NewLotteryController()
 	baccaratController := Controller.NewBaccaratController()
 	//router.GET("/", authController.LoginPage)
+
+	go socket.Manager.Start()
+
+	// Socket
+	router.GET("/ws", socket.WsHandler)
 
 	// todo , 頁面使用的API
 	api := router.Group("/api")

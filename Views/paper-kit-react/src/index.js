@@ -29,11 +29,6 @@ import "bootstrap/scss/bootstrap.scss";
 import "assets/scss/paper-kit.scss?v=1.3.0";
 import "assets/demo/demo.css?v=1.3.0";
 
-// pages
-import Index from "views/Index.js";
-import LandingPage from "views/examples/LandingPage.js";
-import ProfilePage from "views/examples/ProfilePage.js";
-
 //page 2
 import Home from "views/pages/Home.js";
 import SportPage from "views/pages/Sport.js";
@@ -47,6 +42,7 @@ import RegisterPage from "views/pages/Register.js";
 // game
 import GameLottery from "views/games/GameLottery.js";
 import GameBaccarat from "views/games/GameBaccarat.js";
+import GameChess from "views/games/GameChess.js";
 
 // others
 import history from './history';
@@ -65,12 +61,10 @@ ReactDOM.render(
         pauseOnHover
       />
       <Switch>
-        <Route path="/index" render={(props) => <Index {...props} />} />
-        <Route path="/landing-page" render={(props) => <LandingPage {...props} />} />
-        <Route path="/profile-page" render={(props) => <ProfilePage {...props} />} />
         
         <Route path="/game/lottery" render={(props) => <GameLottery {...props} />} />
         <Route path="/game/baccarat" render={(props) => <GameBaccarat {...props} />} />
+        <Route path="/game/chess" render={(props) => <GameChess {...props} />} />
 
         <Route path="/register" render={(props) => <RegisterPage {...props} />} />
         <Route path="/login" render={(props) => <LoginPage {...props} />} />
