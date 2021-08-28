@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strconv"
 	"time"
 
 	database "github.com/fayipon/go-gin/Database/Mysql"
@@ -152,5 +153,51 @@ func (repository *SportOrderRepo) Result() {
 // 定時任務 , 創建賽事
 func (repository *SportOrderRepo) CreateCycle() {
 
-	log.Println("[體育] 創建賽事")
+	//////////////////
+	// 計算當前期數
+
+	tm := time.Now()
+	cycle_value := tm.Format("01021504")
+
+	c, _ := strconv.Atoi(cycle_value)
+	team := c % 6
+
+	team_home := "A"
+	team_away := "B"
+
+	//決定對戰組合
+
+	switch team {
+	case 0:
+		team_home = "A"
+		team_away = "B"
+	case 1:
+		team_home = "C"
+		team_away = "D"
+	case 2:
+		team_home = "E"
+		team_away = "F"
+	case 3:
+		team_home = "A"
+		team_away = "E"
+	case 4:
+		team_home = "B"
+		team_away = "C"
+	case 5:
+		team_home = "D"
+		team_away = "F"
+	}
+
+	var sql = "INSERT INTO `sport_cycle` (`id`, `league_name`, `home_team`, `away_team`, `cycle_value`, `cycle_result`, `home_win_rate`, `away_win_rate`,`handicap_value`, `home_handicap_rate`, `away_handicap_rate`,`bs_value`,  `home_bs_rate`, `away_bs_rate`, `create_time`) VALUES (NULL, 'Fincon聯賽', '"
+	sql += team_home
+	sql += "', '"
+	sql += team_away
+	sql += "', '"
+	sql += cycle_value
+	sql += "', '', '0.97', '0.97', '2.5', '0.97', '0.97', '4.5','0.97', '0.97', CURRENT_TIMESTAMP);"
+	repository.Db.Exec(sql)
+
+	///////////////////////
+
+	log.Println("[體育] 創建賽事 : ", cycle_value, team_home, " VS ", team_away)
 }
