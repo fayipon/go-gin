@@ -8,6 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 
 	socket "github.com/fayipon/go-gin/Socket"
+	task "github.com/fayipon/go-gin/Task"
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
@@ -49,7 +50,11 @@ func Setup() *gin.Engine {
 	baccaratController := Controller.NewBaccaratController()
 	//router.GET("/", authController.LoginPage)
 
+	// Socket 服務
 	go socket.Manager.Start()
+
+	// Cron 服務
+	go task.Start()
 
 	// Socket
 	router.GET("/ws", socket.WsHandler)

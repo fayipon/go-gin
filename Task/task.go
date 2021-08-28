@@ -2,7 +2,7 @@
 	定時任務
 
 ***********************/
-package main
+package task
 
 import (
 	"log"
@@ -11,7 +11,8 @@ import (
 	"github.com/robfig/cron"
 )
 
-func main() {
+// go task.Start()
+func Start() {
 
 	log.Println("Cron Start...")
 
