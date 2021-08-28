@@ -1,3 +1,14 @@
+/*
+
+WebSocket server端
+
+這邊只有簡單的
+channel , private message , 及broadcast
+
+業務套用以broadcast 為主
+
+private message 算是先保留, 後續替換get_user_balance or 踢人 or 到帳成功 派獎等動作
+*/
 package socket
 
 import (

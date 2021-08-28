@@ -1,5 +1,6 @@
 {
   "dependencies": {
-    "react-game-kit": "^1.0.6"
+    "react-game-kit": "^1.0.6",
+    "socket.io-client": "^4.1.3"
   }
 }

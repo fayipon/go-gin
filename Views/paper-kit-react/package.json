@@ -19,7 +19,8 @@
     "react-scripts": "4.0.3",
     "react-toastify": "^7.0.4",
     "react-youtube-background": "^1.0.0",
-    "reactstrap": "8.9.0"
+    "reactstrap": "8.9.0",
+    "websocket": "^1.0.34"
   },
   "scripts": {
     "start": "react-scripts start",
