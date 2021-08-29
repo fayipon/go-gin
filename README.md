@@ -91,3 +91,5 @@ TG @fayitw
 4. 現在啟動整個服務只要go run main.go
 5. 新增體育虛擬賽事生成
 
+8/29
+1. 體育遊戲頁, 賽事列表component
