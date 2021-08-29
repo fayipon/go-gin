@@ -1,8 +1,10 @@
 package Controller
 
 import (
+	"crypto/rand"
 	"fmt"
 	"log"
+	"math/big"
 	"net/http"
 	"strconv"
 	"time"
@@ -36,6 +38,35 @@ func NewSportController() *SportOrderRepo {
 	db := database.InitDb()
 	db.AutoMigrate(&models.SportOrder{})
 	return &SportOrderRepo{Db: db}
+}
+
+// 當前進行中, 賽事接口
+func (repository *SportOrderRepo) GetGames(c *gin.Context) {
+
+	// 從 ctx 中取出 session
+	session := sessions.Default(c)
+	// 判斷是否登入
+	if session.Get("auth") != "1" {
+		c.JSON(http.StatusOK, gin.H{
+			"status":  "0",
+			"message": "請先登入",
+		})
+		return
+	}
+
+	// 計算當前期數
+	tm := time.Now().Add(-time.Minute * 5)
+	cycle_value := tm.Format("01021504")
+
+	var sport_cycle []models.SportCycle
+	repository.Db.Raw("SELECT * FROM sport_cycle where status=1 and cycle_value >=?", cycle_value).Scan(&sport_cycle)
+
+	c.JSON(http.StatusOK, gin.H{
+		"status":  "1",
+		"message": "查詢成功",
+		"data":    sport_cycle,
+	})
+
 }
 
 // 下注接口
@@ -143,11 +174,48 @@ func (repository *SportOrderRepo) CreateOrder(c *gin.Context) {
 func (repository *SportOrderRepo) Result() {
 
 	// 計算當前期數
-	tm := time.Now().Add(-time.Minute * 1)
+	tm := time.Now().Add(-time.Minute * 5)
 	// 月日時分
 	cycle_value := tm.Format("01021504")
 
+	// 虛擬比分
+	cycle_result := ""
+	for i := 0; i < 2; i++ {
+		result, _ := rand.Int(rand.Reader, big.NewInt(8))
+		cycle_result += result.String() + ","
+	}
+
 	log.Println("[體育] 期數 : ", cycle_value)
+	log.Println("[體育] 結果 : ", cycle_result)
+
+	// 寫入該期cycle_result . status = 2
+	var updateCycle models.SportCycle
+	var sql = "UPDATE `sport_cycle` SET `status`='2',`cycle_result` = '"
+	sql += cycle_result
+	sql += "' WHERE `status`=1 and `cycle_value`=?"
+	repository.Db.Raw(sql, cycle_value).Scan(&updateCycle)
+
+	// 寫入該期注單 , 這邊只寫入cycle_result
+	var updateOrder models.SportOrder
+	sql = "UPDATE `sport_order` SET `game_cycle_result` = '"
+	sql += cycle_result
+	sql += "' WHERE `status`=1 and `game_cycle`=?"
+	repository.Db.Raw(sql, cycle_value).Scan(&updateOrder)
+
+	// 抓取該期注單紀錄
+	// todo
+	/*
+		rows, _ := repository.Db.Table("sport_order").Where("game_cycle=?", cycle_value).Rows()
+		defer rows.Close()
+
+		log.Println("[真人]", cycle_value, "期 => ", cycle_result)
+
+		var myOrder MyBaccaratOrder
+		for rows.Next() {
+		}
+
+	*/
+
 }
 
 // 定時任務 , 創建賽事
@@ -166,7 +234,6 @@ func (repository *SportOrderRepo) CreateCycle() {
 	team_away := "B"
 
 	//決定對戰組合
-
 	switch team {
 	case 0:
 		team_home = "A"
@@ -188,13 +255,13 @@ func (repository *SportOrderRepo) CreateCycle() {
 		team_away = "F"
 	}
 
-	var sql = "INSERT INTO `sport_cycle` (`id`, `league_name`, `home_team`, `away_team`, `cycle_value`, `cycle_result`, `home_win_rate`, `away_win_rate`,`handicap_value`, `home_handicap_rate`, `away_handicap_rate`,`bs_value`,  `home_bs_rate`, `away_bs_rate`, `create_time`) VALUES (NULL, 'Fincon聯賽', '"
+	var sql = "INSERT INTO `sport_cycle` (`id`, `league_name`, `home_team`, `away_team`, `cycle_value`, `cycle_result`, `home_win_rate`, `away_win_rate`,`handicap_value`, `home_handicap_rate`, `away_handicap_rate`,`bs_value`,  `home_bs_rate`, `away_bs_rate`, `create_time`, `status`) VALUES (NULL, 'Fincon聯賽', '"
 	sql += team_home
 	sql += "', '"
 	sql += team_away
 	sql += "', '"
 	sql += cycle_value
-	sql += "', '', '0.97', '0.97', '2.5', '0.97', '0.97', '4.5','0.97', '0.97', CURRENT_TIMESTAMP);"
+	sql += "', '', '0.97', '0.97', '2.5', '0.97', '0.97', '4.5','0.97', '0.97', CURRENT_TIMESTAMP, 1);"
 	repository.Db.Exec(sql)
 
 	///////////////////////

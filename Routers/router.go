@@ -57,6 +57,9 @@ func Setup() *gin.Engine {
 	// Cron 服務
 	go task.Start()
 
+	// 體育 模擬體育賽事
+	//go socket.StartSpoort()
+
 	// Socket
 	router.GET("/ws", socket.WsHandler)
 
@@ -86,6 +89,7 @@ func Setup() *gin.Engine {
 
 		// 體育
 		api.POST("/sport_bet", sportController.CreateOrder)
+		api.POST("/sport_games", sportController.GetGames)
 
 	}
 
