@@ -89,4 +89,5 @@ TG @fayitw
 2. 新增體育遊戲頁
 3. 體育頁串連websocket
 4. 現在啟動整個服務只要go run main.go
+5. 新增體育虛擬賽事生成
 
