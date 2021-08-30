@@ -61,12 +61,27 @@ func (repository *SportOrderRepo) GetGames(c *gin.Context) {
 	var sport_cycle []models.SportCycle
 	repository.Db.Raw("SELECT * FROM sport_cycle where status=1 and cycle_value >=?", cycle_value).Scan(&sport_cycle)
 
+	// 格式化
+
+	for i := 0; i < len(sport_cycle); i++ {
+		sport_cycle[i].HomeBsRate = Floor(sport_cycle[i].HomeBsRate)
+		sport_cycle[i].AwayBsRate = Floor(sport_cycle[i].AwayBsRate)
+		sport_cycle[i].HomeWinRate = Floor(sport_cycle[i].HomeWinRate)
+		sport_cycle[i].AwayWinRate = Floor(sport_cycle[i].AwayWinRate)
+		sport_cycle[i].HomeHandicapRate = Floor(sport_cycle[i].HomeHandicapRate)
+		sport_cycle[i].AwayHandicapRate = Floor(sport_cycle[i].AwayHandicapRate)
+	}
+
 	c.JSON(http.StatusOK, gin.H{
 		"status":  "1",
 		"message": "查詢成功",
 		"data":    sport_cycle,
 	})
+}
 
+func Floor(x float32) float32 {
+	unit := float32(10000)
+	return float32(int32(x*unit)) / unit
 }
 
 // 下注接口
@@ -189,18 +204,15 @@ func (repository *SportOrderRepo) Result() {
 	log.Println("[體育] 結果 : ", cycle_result)
 
 	// 寫入該期cycle_result . status = 2
-	var updateCycle models.SportCycle
-	var sql = "UPDATE `sport_cycle` SET `status`='2',`cycle_result` = '"
-	sql += cycle_result
-	sql += "' WHERE `status`=1 and `cycle_value`=?"
-	repository.Db.Raw(sql, cycle_value).Scan(&updateCycle)
+	var sql = "UPDATE `sport_cycle` SET `status`='2',`cycle_result` = CONCAT(home_score, ',', away_score)"
+	sql += " WHERE `status`=1 and `cycle_value`=?"
+	repository.Db.Exec(sql, cycle_value)
 
 	// 寫入該期注單 , 這邊只寫入cycle_result
-	var updateOrder models.SportOrder
 	sql = "UPDATE `sport_order` SET `game_cycle_result` = '"
 	sql += cycle_result
 	sql += "' WHERE `status`=1 and `game_cycle`=?"
-	repository.Db.Raw(sql, cycle_value).Scan(&updateOrder)
+	repository.Db.Exec(sql, cycle_value)
 
 	// 抓取該期注單紀錄
 	// todo
@@ -236,23 +248,23 @@ func (repository *SportOrderRepo) CreateCycle() {
 	//決定對戰組合
 	switch team {
 	case 0:
-		team_home = "A"
-		team_away = "B"
+		team_home = "巴賽隆納"
+		team_away = "皇家馬德里"
 	case 1:
-		team_home = "C"
-		team_away = "D"
+		team_home = "賽維亞"
+		team_away = "瓦萊卡諾"
 	case 2:
-		team_home = "E"
-		team_away = "F"
+		team_home = "格拉納德"
+		team_away = "馬德里競技"
 	case 3:
-		team_home = "A"
-		team_away = "E"
+		team_home = "巴賽隆納"
+		team_away = "格拉納德"
 	case 4:
-		team_home = "B"
-		team_away = "C"
+		team_home = "皇家馬德里"
+		team_away = "賽維亞"
 	case 5:
-		team_home = "D"
-		team_away = "F"
+		team_home = "瓦萊卡諾"
+		team_away = "馬德里競技"
 	}
 
 	var sql = "INSERT INTO `sport_cycle` (`id`, `league_name`, `home_team`, `away_team`, `cycle_value`, `cycle_result`, `home_win_rate`, `away_win_rate`,`handicap_value`, `home_handicap_rate`, `away_handicap_rate`,`bs_value`,  `home_bs_rate`, `away_bs_rate`, `create_time`, `status`) VALUES (NULL, 'Fincon聯賽', '"

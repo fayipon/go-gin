@@ -15,7 +15,6 @@ import Header from "components/Headers/ThirdSport.js";
 import HomeFooter from "components/Footers/HomeFooter.js";
 
 import WebSocket from "components/Socket/SocketSport.js";
-import GameList from "components/Sport/GameList.js";
 
 // ajax
 import axios from 'axios';
@@ -39,11 +38,11 @@ function GameSport() {
         }}>
           <Row>
           <Col md={8} className="pr-0">
-            <GameList />
+            
+            <WebSocket />
           </Col>
           <Col md={4}>
             
-          <WebSocket />
             
           <div style={{
               marginTop:"10px",
@@ -51,7 +50,6 @@ function GameSport() {
               height:"600px"
             }}>
                 下注區塊
-
             </div>
           </Col>
           </Row>

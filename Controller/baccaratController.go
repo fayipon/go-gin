@@ -361,7 +361,7 @@ func (repository *BaccaratOrderRepo) Result() {
 	for rows.Next() {
 		repository.Db.ScanRows(rows, &myOrder)
 
-		result_balance := myOrder.TotalAmount - myOrder.TotalAmount
+		result_balance := (myOrder.TotalAmount + 0) - myOrder.TotalAmount
 
 		switch myOrder.GameTypeId {
 		case 1: // 閒

@@ -55,6 +55,10 @@ var Manager = ClientManager{
 
 // go Manager.Start()
 func (manager *ClientManager) Start() {
+
+	// 模擬賽事進行
+	//go StartSpoort()
+
 	for {
 		select {
 		case conn := <-Manager.Register:
@@ -127,12 +131,15 @@ func (c *Client) Read() {
 		MessageStruct := Message{}
 		json.Unmarshal(message, &MessageStruct)
 
-		if MessageStruct.Action == "broadcast" {
-			Manager.Broadcast <- message
-		} else {
-			Manager.Private <- message
-		}
+		Manager.Broadcast <- message
 
+		/*
+			if MessageStruct.Action == "broadcast" {
+				Manager.Broadcast <- message
+			} else {
+				Manager.Private <- message
+			}
+		*/
 	}
 }
 
