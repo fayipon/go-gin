@@ -11,7 +11,7 @@ class GameList extends React.Component {
       const listItems = games.map((obj) =>
 
         <div key={obj.CycleValue} style={{
-          marginRight:"10px",
+          marginRight:"0px",
           marginLeft:"10px",
           marginTop:"10px",
           padding:"10px",
@@ -19,22 +19,24 @@ class GameList extends React.Component {
           color:"#fff"
         }}>
         <Row>
-          <Col className="text-center">{obj.LeagueName} {obj.HomeTeam}(主) VS {obj.AwayTeam}(客)</Col>
+          <Col className="text-center">{obj.LeagueName} #{obj.CycleValue}</Col>
         </Row>
         <Row className="mb-2 sport-game-list">
-          <Col><div style={{
+          <Col md={1}><div style={{
               backgroundImage: "url(" + require("assets/img/sport/team_icon.jpg").default + ")",
               backgroundPosition: "-80px 105px",
               width: "60px",
               height: "60px"
             }} /></Col>
-          <Col>{obj.HomeTeam} {obj.HomeScore}</Col>
-          <Col>輸贏{obj.HomeWinRate}</Col>
-          <Col>+{obj.HandicapValue} 讓分{obj.HomeHandicapRate}</Col>
-          <Col>+{obj.BsValue} 大小{obj.HomeBsRate}</Col>
+          <Col md={2} className="pl-4">{obj.HomeTeam} {obj.HomeScore}</Col>
+          <Col md={2}>輸贏{obj.HomeWinRate}</Col>
+          <Col md={1} className="text-right">+{obj.HandicapValue} </Col>
+          <Col md={2}>讓分{obj.HomeHandicapRate}</Col>
+          <Col md={1} className="text-right">+{obj.BsValue} </Col>
+          <Col md={2}>大小{obj.HomeBsRate}</Col>
         </Row>
-        <Row>
-          <Col>
+        <Row className="mb-2 sport-game-list">
+          <Col md={1}>
           <div style={{
               backgroundImage: "url(" + require("assets/img/sport/team_icon.jpg").default + ")",
               backgroundPosition: "-80px 105px",
@@ -42,12 +44,12 @@ class GameList extends React.Component {
               height: "60px",
             }} />
             </Col>
-            <Col>
-            {obj.AwayTeam} {obj.AwayScore}
-          </Col>
-          <Col>輸贏{obj.AwayWinRate}</Col>
-          <Col>讓分{obj.AwayHandicapRate}</Col>
-          <Col>大小{obj.AwayBsRate}</Col>
+            <Col md={2} className="pl-4">{obj.AwayTeam} {obj.AwayScore}</Col>
+          <Col md={2}>輸贏{obj.AwayWinRate}</Col>
+          <Col md={1} className="text-right"></Col>
+          <Col md={2}>讓分{obj.AwayHandicapRate}</Col>
+          <Col md={1} className="text-right"></Col>
+          <Col md={2}>大小{obj.AwayBsRate}</Col>
         </Row>
     </div>
       );
