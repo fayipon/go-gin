@@ -43,11 +43,7 @@ class WebSocket extends Component {
     client.onmessage = (evt) => {
 
       const json = JSON.parse(evt.data)
-
-      console.log(json.data);
-
       if (json.data != null) {
-
         this.setState({
           gameLists:json.data
         });
