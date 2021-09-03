@@ -29,6 +29,7 @@ TG @fayitw
 ![image](https://github.com/fayipon/go-gin/blob/main/Demo/006.jpg?raw=true)
 
 體育  
+![image](https://github.com/fayipon/go-gin/blob/main/Demo/007.jpg?raw=true)
 
 電競  
 
